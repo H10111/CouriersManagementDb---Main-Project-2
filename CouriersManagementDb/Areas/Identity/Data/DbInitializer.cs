@@ -6,7 +6,7 @@ using System.Linq;
 
 public static class DbInitializer
 {
-    public static void Initialize(CouriersManagementDbContext context, UserManager<Microsoft.AspNetCore.Identity.IdentityUser> userManager)
+    public static void Initialize(CouriersManagementDbContext context, UserManager<ApplicationUser> userManager)
     {
         context.Database.EnsureCreated();
 
@@ -38,16 +38,16 @@ public static class DbInitializer
         {
             var couriers = new Courier[]
             {
-                new Courier { Name = "John", Contact = "02108744563" },
-                new Courier { Name = "Hasashi", Contact = "02108924532" },
-                new Courier { Name = "Linda", Contact = "02108564321" },
-                new Courier { Name = "Raj", Contact = "02108432156" },
-                new Courier { Name = "Emily", Contact = "02108321564" },
-                new Courier { Name = "Tony", Contact = "02108215634" },
-                new Courier { Name = "Bruce", Contact = "02108156342" },
-                new Courier { Name = "Natasha", Contact = "02108063421" },
-                new Courier { Name = "Clint", Contact = "02107934215" },
-                new Courier { Name = "Steve", Contact = "02107842153" }
+                new Courier { Name = "John", PhoneNumber = "02108744563" },
+                new Courier { Name = "Hasashi", PhoneNumber = "02108924532" },
+                new Courier { Name = "Linda", PhoneNumber = "02108564321" },
+                new Courier { Name = "Raj", PhoneNumber = "02108432156" },
+                new Courier { Name = "Emily", PhoneNumber = "02108321564" },
+                new Courier { Name = "Tony", PhoneNumber = "02108215634" },
+                new Courier { Name = "Bruce", PhoneNumber = "02108156342" },
+                new Courier { Name = "Natasha", PhoneNumber = "02108063421" },
+                new Courier { Name = "Clint", PhoneNumber = "02107934215" },
+                new Courier { Name = "Steve", PhoneNumber = "02107842153" }
             };
 
             foreach (var courier in couriers)
@@ -65,7 +65,6 @@ public static class DbInitializer
                 new Employee { Name = "Bob Smith", Role = "Dispatcher", ContactInfo = "bob.smith@example.com" },
                 new Employee { Name = "Carol Danvers", Role = "Driver", ContactInfo = "carol.danvers@example.com" },
                 new Employee { Name = "Dave Banner", Role = "Loader", ContactInfo = "dave.banner@example.com" },
-                // Add more predefined employees...
             };
 
             foreach (var employee in employees)

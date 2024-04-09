@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace CouriersManagementDb.Areas.Identity.Data;
 
@@ -23,6 +24,7 @@ public class CouriersManagementDbContext : IdentityDbContext<ApplicationUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
         modelBuilder.Entity<Payment>(entity =>
         {
             entity.Property(e => e.Amount).HasPrecision(18, 2); // For example, this supports values up to 999,999,999,999,999.99
