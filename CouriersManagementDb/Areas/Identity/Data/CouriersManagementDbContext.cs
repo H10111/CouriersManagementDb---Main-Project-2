@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace CouriersManagementDb.Areas.Identity.Data;
 
@@ -20,9 +21,15 @@ public class CouriersManagementDbContext : IdentityDbContext<IdentityUser>
     public DbSet<Location> Locations { get; set; }
     public DbSet<Tracking> Trackings { get; set; }
     public DbSet<Pallet> Pallets { get; set; }
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(builder);
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Payment>(entity =>
+        {
+            entity.Property(e => e.Amount).HasPrecision(18, 2); // For example, this supports values up to 999,999,999,999,999.99
+
+
+        });
         // Customize the ASP.NET Identity model and override the defaults if needed.
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
