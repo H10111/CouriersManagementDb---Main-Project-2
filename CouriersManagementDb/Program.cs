@@ -12,6 +12,25 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+CreateDbIfNotExists(app);
+
+static void CreateDbIfNotExists(IHost host)
+{
+    using (var scope = host.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        try
+        {
+            var context = services.GetRequiredService<CouriersManagementDbContext>();
+            DbInitializer.Initialize(context);
+        }
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "An error occurred creating the DB.");
+        }
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -25,7 +44,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.MapRazorPages();
 app.UseAuthorization();
 
 app.MapControllerRoute(
