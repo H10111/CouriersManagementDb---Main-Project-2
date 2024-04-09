@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using CouriersManagementDb.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,15 @@ public class CouriersManagementDbContext : IdentityDbContext<IdentityUser>
         : base(options)
     {
     }
-
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Courier> Couriers { get; set; }
+    public DbSet<Package> Packages { get; set; }
+    public DbSet<Shipment> Shipments { get; set; }
+    public DbSet<Payment> Payments { get; set; }
+    public DbSet<Employee> Employees { get; set; }
+    public DbSet<Location> Locations { get; set; }
+    public DbSet<Tracking> Trackings { get; set; }
+    public DbSet<Pallet> Pallets { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
