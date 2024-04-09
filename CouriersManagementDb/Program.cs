@@ -6,7 +6,7 @@ var connectionString = builder.Configuration.GetConnectionString("CouriersManage
 
 builder.Services.AddDbContext<CouriersManagementDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<CouriersManagementDbContext>();
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<CouriersManagementDbContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

@@ -2,11 +2,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace CouriersManagementDb.Areas.Identity.Data;
 
-public class CouriersManagementDbContext : IdentityDbContext<IdentityUser>
+public class CouriersManagementDbContext : IdentityDbContext<ApplicationUser>
 {
     public CouriersManagementDbContext(DbContextOptions<CouriersManagementDbContext> options)
         : base(options)

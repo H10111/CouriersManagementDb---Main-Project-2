@@ -6,7 +6,7 @@ using System.Linq;
 
 public static class DbInitializer
 {
-    public static void Initialize(CouriersManagementDbContext context, UserManager<IdentityUser> userManager)
+    public static void Initialize(CouriersManagementDbContext context, UserManager<Microsoft.AspNetCore.Identity.IdentityUser> userManager)
     {
         context.Database.EnsureCreated();
 
