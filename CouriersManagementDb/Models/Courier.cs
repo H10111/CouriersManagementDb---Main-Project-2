@@ -10,9 +10,8 @@ namespace CouriersManagementDb.Models
         [Required(ErrorMessage = "Name is required")]
         [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters")]
         public string Name { get; set; }
-        [Required]
-        [StringLength(100)]
-        [RegularExpression(@"^\+?$", ErrorMessage = "Invalid contact format")]
+        [Required(ErrorMessage = "Number is required")]
+        [Phone(ErrorMessage = "Invalid phone number format")]
         public string PhoneNumber { get; set; }
 
         // Navigation properties
