@@ -4,12 +4,23 @@ namespace CouriersManagementDb.Models
 {
     public class Tracking
     {
+        public enum DeliveryStatusEnum
+        {
+            Pending,
+            InTransit,
+            Delivered,
+            Delayed,
+            Cancelled
+        }
+
         [Key]
         public int TrackingID { get; set; }
 
         [Required(ErrorMessage = "Status is required")]
-        public string Status { get; set; }
-        [Required(ErrorMessage = "TimeStamp is required")]
+        public string DeliveryStatus { get; set; }
+        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Arrival date is required")]
+        [FutureDate(ErrorMessage = "Arrival date must be in the future")]
         public DateTime Timestamp { get; set; }
 
         // Foreign keys

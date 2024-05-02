@@ -32,13 +32,13 @@ public class CouriersManagementDbContext : IdentityDbContext<ApplicationUser>
 
         });
         modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Shipment)
+                .HasOne(p => p.Shipments)
                 .WithMany(s => s.Payments)
                 .HasForeignKey(p => p.ShipmentID)
                 .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Payment>()
-            .HasOne(p => p.Customer)
+            .HasOne(p => p.Customers)
             .WithMany(c => c.Payments)
             .HasForeignKey(p => p.CustomerID)
             .OnDelete(DeleteBehavior.Restrict);
