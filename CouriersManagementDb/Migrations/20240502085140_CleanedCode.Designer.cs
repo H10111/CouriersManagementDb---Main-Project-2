@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CouriersManagementDb.Migrations
 {
     [DbContext(typeof(CouriersManagementDbContext))]
-    [Migration("20240502083623_CleanedCode")]
+    [Migration("20240502085140_CleanedCode")]
     partial class CleanedCode
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace CouriersManagementDb.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -111,9 +111,10 @@ namespace CouriersManagementDb.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("DriverNumber")
+                    b.Property<string>("DriverNumber")
+                        .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(15)");
 
                     b.HasKey("CourierID");
 
@@ -161,9 +162,10 @@ namespace CouriersManagementDb.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("EmployeeNumber")
+                    b.Property<string>("EmployeeNumber")
+                        .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -270,6 +272,9 @@ namespace CouriersManagementDb.Migrations
                     b.Property<int>("CustomerID")
                         .HasColumnType("int");
 
+                    b.Property<int>("EmployeeID")
+                        .HasColumnType("int");
+
                     b.Property<int>("PackageID")
                         .HasColumnType("int");
 
@@ -284,6 +289,8 @@ namespace CouriersManagementDb.Migrations
                     b.HasIndex("CourierID");
 
                     b.HasIndex("CustomerID");
+
+                    b.HasIndex("EmployeeID");
 
                     b.HasIndex("PackageID");
 
@@ -529,6 +536,12 @@ namespace CouriersManagementDb.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("CouriersManagementDb.Models.Employee", "Employee")
+                        .WithMany("payments")
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CouriersManagementDb.Models.Package", "Packages")
                         .WithMany()
                         .HasForeignKey("PackageID")
@@ -542,6 +555,8 @@ namespace CouriersManagementDb.Migrations
                         .IsRequired();
 
                     b.Navigation("Customers");
+
+                    b.Navigation("Employee");
 
                     b.Navigation("Packages");
 
@@ -651,6 +666,11 @@ namespace CouriersManagementDb.Migrations
                     b.Navigation("Payments");
 
                     b.Navigation("Shipments");
+                });
+
+            modelBuilder.Entity("CouriersManagementDb.Models.Employee", b =>
+                {
+                    b.Navigation("payments");
                 });
 
             modelBuilder.Entity("CouriersManagementDb.Models.Pallet", b =>

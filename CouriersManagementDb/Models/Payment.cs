@@ -25,6 +25,7 @@ namespace CouriersManagementDb.Models
         public int PackageID { get; set; }
         [Required]
         public int CustomerID { get; set; }
+        public int EmployeeID { get; set; } 
 
         // Navigation properties
         [ForeignKey("ShipmentID")]
@@ -33,6 +34,8 @@ namespace CouriersManagementDb.Models
         public virtual Customer Customers { get; set; }
         [ForeignKey("PackageID")]
         public virtual Package Packages { get; set; }
+
+        public virtual Employee Employee { get; set; }
     }
 }
 public class FutureDateAttribute : ValidationAttribute

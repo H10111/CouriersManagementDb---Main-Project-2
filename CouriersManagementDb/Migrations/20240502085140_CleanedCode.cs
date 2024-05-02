@@ -59,7 +59,7 @@ namespace CouriersManagementDb.Migrations
                     CourierID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DriverName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    DriverNumber = table.Column<int>(type: "int", maxLength: 15, nullable: false)
+                    DriverNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -89,7 +89,7 @@ namespace CouriersManagementDb.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmployeeNumber = table.Column<int>(type: "int", maxLength: 15, nullable: false)
+                    EmployeeNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -302,6 +302,7 @@ namespace CouriersManagementDb.Migrations
                     ShipmentID = table.Column<int>(type: "int", nullable: false),
                     PackageID = table.Column<int>(type: "int", nullable: false),
                     CustomerID = table.Column<int>(type: "int", nullable: false),
+                    EmployeeID = table.Column<int>(type: "int", nullable: false),
                     CourierID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -318,6 +319,12 @@ namespace CouriersManagementDb.Migrations
                         principalTable: "Customers",
                         principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Payments_Employees_EmployeeID",
+                        column: x => x.EmployeeID,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Payments_Packages_PackageID",
                         column: x => x.PackageID,
@@ -425,6 +432,11 @@ namespace CouriersManagementDb.Migrations
                 column: "CustomerID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Payments_EmployeeID",
+                table: "Payments",
+                column: "EmployeeID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Payments_PackageID",
                 table: "Payments",
                 column: "PackageID");
@@ -474,9 +486,6 @@ namespace CouriersManagementDb.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Employees");
-
-            migrationBuilder.DropTable(
                 name: "Payments");
 
             migrationBuilder.DropTable(
@@ -487,6 +496,9 @@ namespace CouriersManagementDb.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "Locations");
