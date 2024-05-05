@@ -9,10 +9,10 @@ namespace CouriersManagementDb.Models
 
         [Required(ErrorMessage = "Name is required")]
         [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters")]
-        public string Name { get; set; }
+        public string CustomerName { get; set; }
 
         [Required(ErrorMessage = "Address is required")]
         [StringLength(200, ErrorMessage = "Address cannot be longer than 200 characters")]
-        public string Address { get; set; }
+        public string CustomerAddress { get; set; }
     }
 }

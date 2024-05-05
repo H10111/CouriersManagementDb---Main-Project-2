@@ -181,12 +181,12 @@ namespace CouriersManagementDb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LocationID"));
 
-                    b.Property<string>("Address")
+                    b.Property<string>("CustomerAddress")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("CustomerName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
