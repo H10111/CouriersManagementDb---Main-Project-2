@@ -4,6 +4,7 @@ using CouriersManagementDb.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CouriersManagementDb.Migrations
 {
     [DbContext(typeof(CouriersManagementDbContext))]
-    partial class CouriersManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240505224037_CustomerData")]
+    partial class CustomerData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,7 +245,6 @@ namespace CouriersManagementDb.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PalletID"));
 
                     b.Property<int?>("CourierID")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("PalletID");
@@ -314,8 +316,9 @@ namespace CouriersManagementDb.Migrations
                     b.Property<int>("CustomerID")
                         .HasColumnType("int");
 
-                    b.Property<int>("DeliveryStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("DeliveryStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ShipmentID");
 
@@ -516,9 +519,7 @@ namespace CouriersManagementDb.Migrations
                 {
                     b.HasOne("CouriersManagementDb.Models.Courier", "Courier")
                         .WithMany("Pallets")
-                        .HasForeignKey("CourierID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourierID");
 
                     b.Navigation("Courier");
                 });

@@ -31,6 +31,7 @@ public class CouriersManagementDbContext : IdentityDbContext<ApplicationUser>
 
 
         });
+
         modelBuilder.Entity<Payment>()
                 .HasOne(p => p.Shipments)
                 .WithMany(s => s.Payments)

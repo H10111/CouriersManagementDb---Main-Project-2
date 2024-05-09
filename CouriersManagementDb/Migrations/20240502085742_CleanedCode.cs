@@ -226,12 +226,13 @@ namespace CouriersManagementDb.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pallets", x => x.PalletID);
+                 table.PrimaryKey("PK_Pallets", x => x.PalletID);
                     table.ForeignKey(
                         name: "FK_Pallets_Couriers_CourierID",
                         column: x => x.CourierID,
                         principalTable: "Couriers",
-                        principalColumn: "CourierID");
+                        principalColumn: "CourierID",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(

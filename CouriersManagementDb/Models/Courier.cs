@@ -14,7 +14,7 @@ namespace CouriersManagementDb.Models
 
         [Required(ErrorMessage = "Diver number is required.")]
         [StringLength(15, MinimumLength = 10, ErrorMessage = "Customer number must be between 10 and 15 digits long.")]
-        [RegularExpression(@"^\+?[0-9]\d{1,14}$", ErrorMessage = "Customer number must be a valid international phone number.")]
+        [RegularExpression(@"^\+?[0-9]\d{1,14}$", ErrorMessage = "Customer number must be a valid phone number.")]
         public string DriverNumber { get; set; }
 
         // Navigation properties

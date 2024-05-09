@@ -15,10 +15,11 @@ namespace CouriersManagementDb.Models
         }
 
         [Key]
+        [Required]
         public int ShipmentID { get; set; }
 
         [Required(ErrorMessage = "Delivery status is required")]
-        public string DeliveryStatus { get; set; }
+        public DeliveryStatusEnum DeliveryStatus { get; set; }
 
         [DataType(DataType.Date)]
         [Required(ErrorMessage = "Arrival date is required")]

@@ -18,7 +18,7 @@ namespace CouriersManagementDb.Models
 
         [Required(ErrorMessage = "Employee number is required.")]
         [StringLength(15, MinimumLength = 10, ErrorMessage = "Employee number must be between 10 and 15 digits long.")]
-        [RegularExpression(@"^\+?[0-9]\d{1,14}$", ErrorMessage = "Employee number must be a valid international phone number.")]
+        [RegularExpression(@"^\+?[0-9]\d{1,14}$", ErrorMessage = "Employee number must be a valid phone number.")]
         public string EmployeeNumber { get; set; }
 
         public ICollection<Payment> payments { get; set; } 

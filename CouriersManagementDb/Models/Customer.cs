@@ -20,7 +20,7 @@ namespace CouriersManagementDb.Models
 
         [Required(ErrorMessage = "Customer number is required.")]
         [StringLength(15, MinimumLength = 10, ErrorMessage = "Customer number must be between 10 and 15 digits long.")]
-        [RegularExpression(@"^\+?[0-9]\d{1,14}$", ErrorMessage = "Customer number must be a valid international phone number.")]
+        [RegularExpression(@"^\+?[0-9]\d{1,14}$", ErrorMessage = "Customer number must be a valid phone number.")]
         public string CustomerNumber { get; set; }
         public virtual ICollection<Shipment> Shipments { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
