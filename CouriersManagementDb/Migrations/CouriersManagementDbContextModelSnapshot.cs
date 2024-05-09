@@ -504,7 +504,7 @@ namespace CouriersManagementDb.Migrations
                     b.HasOne("CouriersManagementDb.Models.Shipment", "Shipments")
                         .WithMany("Packages")
                         .HasForeignKey("ShipmentID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Pallet");

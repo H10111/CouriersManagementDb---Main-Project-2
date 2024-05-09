@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CouriersManagementDb.Migrations
 {
     /// <inheritdoc />
-    public partial class CleanedCode : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -222,17 +222,17 @@ namespace CouriersManagementDb.Migrations
                 {
                     PalletID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CourierID = table.Column<int>(type: "int", nullable: true)
+                    CourierID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                 table.PrimaryKey("PK_Pallets", x => x.PalletID);
+                    table.PrimaryKey("PK_Pallets", x => x.PalletID);
                     table.ForeignKey(
                         name: "FK_Pallets_Couriers_CourierID",
                         column: x => x.CourierID,
                         principalTable: "Couriers",
                         principalColumn: "CourierID",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -241,7 +241,7 @@ namespace CouriersManagementDb.Migrations
                 {
                     ShipmentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DeliveryStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DeliveryStatus = table.Column<int>(type: "int", nullable: false),
                     ArrivalDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CourierID = table.Column<int>(type: "int", nullable: false),
                     CustomerID = table.Column<int>(type: "int", nullable: false)
@@ -289,7 +289,7 @@ namespace CouriersManagementDb.Migrations
                         column: x => x.ShipmentID,
                         principalTable: "Shipments",
                         principalColumn: "ShipmentID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(

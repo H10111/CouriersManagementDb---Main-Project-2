@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CouriersManagementDb.Migrations
 {
     [DbContext(typeof(CouriersManagementDbContext))]
-    [Migration("20240502085742_CleanedCode")]
-    partial class CleanedCode
+    [Migration("20240509020958_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -245,6 +245,7 @@ namespace CouriersManagementDb.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PalletID"));
 
                     b.Property<int?>("CourierID")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("PalletID");
@@ -316,9 +317,8 @@ namespace CouriersManagementDb.Migrations
                     b.Property<int>("CustomerID")
                         .HasColumnType("int");
 
-                    b.Property<string>("DeliveryStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DeliveryStatus")
+                        .HasColumnType("int");
 
                     b.HasKey("ShipmentID");
 
@@ -507,7 +507,7 @@ namespace CouriersManagementDb.Migrations
                     b.HasOne("CouriersManagementDb.Models.Shipment", "Shipments")
                         .WithMany("Packages")
                         .HasForeignKey("ShipmentID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Pallet");
@@ -519,7 +519,9 @@ namespace CouriersManagementDb.Migrations
                 {
                     b.HasOne("CouriersManagementDb.Models.Courier", "Courier")
                         .WithMany("Pallets")
-                        .HasForeignKey("CourierID");
+                        .HasForeignKey("CourierID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Courier");
                 });

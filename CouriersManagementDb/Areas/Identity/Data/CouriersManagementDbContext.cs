@@ -43,6 +43,12 @@ public class CouriersManagementDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(c => c.Payments)
             .HasForeignKey(p => p.CustomerID)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Package>()
+        .HasOne(p => p.Shipments)
+        .WithMany(s => s.Packages)
+        .HasForeignKey(p => p.ShipmentID)
+        .OnDelete(DeleteBehavior.Restrict);
         // Customize the ASP.NET Identity model and override the defaults if needed.
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
