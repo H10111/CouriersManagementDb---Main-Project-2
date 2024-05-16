@@ -20,10 +20,22 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Shipments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var couriersManagementDbContext = _context.Shipments.Include(s => s.Courier).Include(s => s.Customer);
-            return View(await couriersManagementDbContext.ToListAsync());
+            IQueryable<Shipment> shipments = _context.Shipments
+                .Include(s => s.Courier)
+                .Include(s => s.Customer);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                shipments = shipments.Where(s => s.Courier.DriverName.Contains(searchString)
+                                              || s.Customer.CustomerName.Contains(searchString)
+                                              || s.Customer.CustomerAddress.Contains(searchString)
+                                              || s.DeliveryStatus.ToString().Contains(searchString)
+                                              || EF.Functions.Like(s.ArrivalDate.ToString(), $"%{searchString}%"));
+            }
+
+            return View(await shipments.ToListAsync());
         }
 
         // GET: Shipments/Details/5

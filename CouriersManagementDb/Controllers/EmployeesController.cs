@@ -20,9 +20,18 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Employees.ToListAsync());
+            IQueryable<Employee> employees = _context.Employees;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                employees = employees.Where(s => s.EmployeeName.Contains(searchString)
+                                              || s.Role.Contains(searchString)
+                                              || s.EmployeeNumber.Contains(searchString));
+            }
+
+            return View(await employees.ToListAsync());
         }
 
         // GET: Employees/Details/5

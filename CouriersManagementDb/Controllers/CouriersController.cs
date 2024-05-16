@@ -20,9 +20,18 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Couriers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Couriers.ToListAsync());
+            var couriers = from m in _context.Couriers
+                           select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                couriers = couriers.Where(s => s.DriverName.Contains(searchString)
+                                            || s.DriverNumber.Contains(searchString));
+            }
+
+            return View(await couriers.ToListAsync());
         }
 
         // GET: Couriers/Details/5

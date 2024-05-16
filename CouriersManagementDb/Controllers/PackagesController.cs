@@ -20,12 +20,21 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Packages
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var couriersManagementDbContext = _context.Packages.Include(p => p.Pallet).Include(p => p.Shipments);
-            return View(await couriersManagementDbContext.ToListAsync());
-        }
+            IQueryable<Package> packages = _context.Packages
+                .Include(p => p.Shipments)
+                .Include(p => p.Pallet);
 
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                packages = packages.Where(p => p.Dimensions.Contains(searchString)
+                                            || p.Contents.Contains(searchString)
+                                            || p.DeliveryStatus.Contains(searchString));
+            }
+
+            return View(await packages.ToListAsync());
+        }
         // GET: Packages/Details/5
         public async Task<IActionResult> Details(int? id)
         {

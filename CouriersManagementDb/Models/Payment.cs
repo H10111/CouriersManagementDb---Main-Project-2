@@ -36,6 +36,11 @@ namespace CouriersManagementDb.Models
         public virtual Package Packages { get; set; }
 
         public virtual Employee Employee { get; set; }
+
+        [NotMapped]
+        public object Contents { get; internal set; }
+        [NotMapped]
+        public object DeliveryStatus { get; internal set; }
     }
 }
 public class FutureDateAttribute : ValidationAttribute

@@ -10,30 +10,23 @@ using CouriersManagementDb.Models;
 
 namespace CouriersManagementDb.Controllers
 {
-    public class CustomersController : Controller
+    public class PalletsController : Controller
     {
         private readonly CouriersManagementDbContext _context;
 
-        public CustomersController(CouriersManagementDbContext context)
+        public PalletsController(CouriersManagementDbContext context)
         {
             _context = context;
         }
-        public async Task<IActionResult> Index(string searchString)
+
+        // GET: Pallets
+        public async Task<IActionResult> Index()
         {
-            IQueryable<Customer> customers = _context.Customers;
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                customers = customers.Where(s => s.CustomerName.Contains(searchString)
-                                              || s.CustomerAddress.Contains(searchString));
-            }
-
-            return View(await customers.ToListAsync());
+            var couriersManagementDbContext = _context.Pallets.Include(p => p.Courier);
+            return View(await couriersManagementDbContext.ToListAsync());
         }
 
-
-
-        // GET: Customers/Details/5
+        // GET: Pallets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -41,39 +34,42 @@ namespace CouriersManagementDb.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
-            if (customer == null)
+            var pallet = await _context.Pallets
+                .Include(p => p.Courier)
+                .FirstOrDefaultAsync(m => m.PalletID == id);
+            if (pallet == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            return View(pallet);
         }
 
-        // GET: Customers/Create
+        // GET: Pallets/Create
         public IActionResult Create()
         {
+            ViewData["CourierID"] = new SelectList(_context.Couriers, "CourierID", "DriverName");
             return View();
         }
 
-        // POST: Customers/Create
+        // POST: Pallets/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerId,CustomerName,CustomerAddress,CustomerNumber")] Customer customer)
+        public async Task<IActionResult> Create([Bind("PalletID,CourierID")] Pallet pallet)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _context.Add(customer);
+                _context.Add(pallet);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            ViewData["CourierID"] = new SelectList(_context.Couriers, "CourierID", "DriverName", pallet.CourierID);
+            return View(pallet);
         }
 
-        // GET: Customers/Edit/5
+        // GET: Pallets/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,37 +77,37 @@ namespace CouriersManagementDb.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
+            var pallet = await _context.Pallets.FindAsync(id);
+            if (pallet == null)
             {
                 return NotFound();
             }
-            return View(customer);
+            ViewData["CourierID"] = new SelectList(_context.Couriers, "CourierID", "DriverName", pallet.CourierID);
+            return View(pallet);
         }
 
-        // POST: Customers/Edit/5
+        // POST: Pallets/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerId,CustomerName,CustomerAddress,CustomerNumber")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("PalletID,CourierID")] Pallet pallet)
         {
-            if (id != customer.CustomerId)
+            if (id != pallet.PalletID)
             {
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(customer);
+                    _context.Update(pallet);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CustomerExists(customer.CustomerId))
+                    if (!PalletExists(pallet.PalletID))
                     {
                         return NotFound();
                     }
@@ -122,10 +118,11 @@ namespace CouriersManagementDb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            ViewData["CourierID"] = new SelectList(_context.Couriers, "CourierID", "DriverName", pallet.CourierID);
+            return View(pallet);
         }
 
-        // GET: Customers/Delete/5
+        // GET: Pallets/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,34 +130,35 @@ namespace CouriersManagementDb.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
-            if (customer == null)
+            var pallet = await _context.Pallets
+                .Include(p => p.Courier)
+                .FirstOrDefaultAsync(m => m.PalletID == id);
+            if (pallet == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            return View(pallet);
         }
 
-        // POST: Customers/Delete/5
+        // POST: Pallets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer != null)
+            var pallet = await _context.Pallets.FindAsync(id);
+            if (pallet != null)
             {
-                _context.Customers.Remove(customer);
+                _context.Pallets.Remove(pallet);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomerExists(int id)
+        private bool PalletExists(int id)
         {
-            return _context.Customers.Any(e => e.CustomerId == id);
+            return _context.Pallets.Any(e => e.PalletID == id);
         }
     }
 }

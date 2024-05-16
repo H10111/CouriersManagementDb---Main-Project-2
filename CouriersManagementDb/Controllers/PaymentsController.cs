@@ -13,6 +13,7 @@ namespace CouriersManagementDb.Controllers
     public class PaymentsController : Controller
     {
         private readonly CouriersManagementDbContext _context;
+        private string? amountRange;
 
         public PaymentsController(CouriersManagementDbContext context)
         {
@@ -20,15 +21,49 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Payments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, decimal? minAmount, decimal? maxAmount, DateTime? startDate, DateTime? endDate)
         {
-            var couriersManagementDbContext = _context.Payments
+            var paymentsQuery = _context.Payments
                 .Include(p => p.Customers)
-                .Include(p => p.Employee)
                 .Include(p => p.Packages)
-                .Include(p => p.Shipments);
-            return View(await couriersManagementDbContext.ToListAsync());
+                .Include(p => p.Shipments)
+                .Include(p => p.Employee)
+                .AsQueryable();
+
+            // Filtering by search string
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                paymentsQuery = paymentsQuery.Where(p =>
+                    p.Customers.CustomerName.Contains(searchString) ||
+                    p.Packages.Contents.Contains(searchString) ||
+                    p.Shipments.DeliveryStatus.ToString().Contains(searchString));
+            }
+
+            // Filtering by amount range
+            if (minAmount.HasValue)
+            {
+                paymentsQuery = paymentsQuery.Where(p => p.Amount >= minAmount.Value);
+            }
+            if (maxAmount.HasValue)
+            {
+                paymentsQuery = paymentsQuery.Where(p => p.Amount <= maxAmount.Value);
+            }
+
+            // Filtering by date range
+            if (startDate.HasValue)
+            {
+                paymentsQuery = paymentsQuery.Where(p => p.Timestamp >= startDate.Value);
+            }
+            if (endDate.HasValue)
+            {
+                paymentsQuery = paymentsQuery.Where(p => p.Timestamp <= endDate.Value);
+            }
+
+            return View(await paymentsQuery.ToListAsync());
         }
+
+
+
 
         // GET: Payments/Details/5
         public async Task<IActionResult> Details(int? id)

@@ -10,30 +10,22 @@ using CouriersManagementDb.Models;
 
 namespace CouriersManagementDb.Controllers
 {
-    public class CustomersController : Controller
+    public class LocationsController : Controller
     {
         private readonly CouriersManagementDbContext _context;
 
-        public CustomersController(CouriersManagementDbContext context)
+        public LocationsController(CouriersManagementDbContext context)
         {
             _context = context;
         }
-        public async Task<IActionResult> Index(string searchString)
+
+        // GET: Locations
+        public async Task<IActionResult> Index()
         {
-            IQueryable<Customer> customers = _context.Customers;
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                customers = customers.Where(s => s.CustomerName.Contains(searchString)
-                                              || s.CustomerAddress.Contains(searchString));
-            }
-
-            return View(await customers.ToListAsync());
+            return View(await _context.Locations.ToListAsync());
         }
 
-
-
-        // GET: Customers/Details/5
+        // GET: Locations/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -41,39 +33,39 @@ namespace CouriersManagementDb.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
-            if (customer == null)
+            var location = await _context.Locations
+                .FirstOrDefaultAsync(m => m.LocationID == id);
+            if (location == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            return View(location);
         }
 
-        // GET: Customers/Create
+        // GET: Locations/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Customers/Create
+        // POST: Locations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerId,CustomerName,CustomerAddress,CustomerNumber")] Customer customer)
+        public async Task<IActionResult> Create([Bind("LocationID,CustomerName,CustomerAddress")] Location location)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _context.Add(customer);
+                _context.Add(location);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View(location);
         }
 
-        // GET: Customers/Edit/5
+        // GET: Locations/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,37 +73,36 @@ namespace CouriersManagementDb.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
+            var location = await _context.Locations.FindAsync(id);
+            if (location == null)
             {
                 return NotFound();
             }
-            return View(customer);
+            return View(location);
         }
 
-        // POST: Customers/Edit/5
+        // POST: Locations/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerId,CustomerName,CustomerAddress,CustomerNumber")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("LocationID,CustomerName,CustomerAddress")] Location location)
         {
-            if (id != customer.CustomerId)
+            if (id != location.LocationID)
             {
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(customer);
+                    _context.Update(location);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CustomerExists(customer.CustomerId))
+                    if (!LocationExists(location.LocationID))
                     {
                         return NotFound();
                     }
@@ -122,10 +113,10 @@ namespace CouriersManagementDb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View(location);
         }
 
-        // GET: Customers/Delete/5
+        // GET: Locations/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,34 +124,34 @@ namespace CouriersManagementDb.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
-            if (customer == null)
+            var location = await _context.Locations
+                .FirstOrDefaultAsync(m => m.LocationID == id);
+            if (location == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            return View(location);
         }
 
-        // POST: Customers/Delete/5
+        // POST: Locations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer != null)
+            var location = await _context.Locations.FindAsync(id);
+            if (location != null)
             {
-                _context.Customers.Remove(customer);
+                _context.Locations.Remove(location);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomerExists(int id)
+        private bool LocationExists(int id)
         {
-            return _context.Customers.Any(e => e.CustomerId == id);
+            return _context.Locations.Any(e => e.LocationID == id);
         }
     }
 }
