@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Index";
+    var nameSortParam = ViewData["NameSortParm"]?.ToString() == "name_desc" ? "Name" : "name_desc";
+    var numberSortParam = ViewData["NumberSortParm"]?.ToString() == "number_desc" ? "Number" : "number_desc";
 }
 
 <h1>Customers</h1>
@@ -9,6 +11,11 @@
 <form asp-action="Index" method="get">
     <div class="form-group">
         <input type="text" name="searchString" class="form-control" placeholder="Search by name or address" />
+        <select name="sortOrder" onchange="this.form.submit()" class="form-control">
+            <option value="">Sort by</option>
+            <option value="@nameSortParam">Name @(nameSortParam == "Name" ? "Ascending" : "Descending")</option>
+            <option value="@numberSortParam">Number @(numberSortParam == "Number" ? "Ascending" : "Descending")</option>
+        </select>
         <button type="submit" class="btn btn-primary">Search</button>
     </div>
 </form>
@@ -32,23 +39,24 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CustomerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CustomerAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CustomerNumber)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CustomerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CustomerId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CustomerId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>    
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerNumber)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CustomerId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CustomerId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CustomerId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

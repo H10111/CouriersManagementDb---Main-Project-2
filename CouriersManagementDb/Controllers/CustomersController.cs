@@ -18,20 +18,40 @@ namespace CouriersManagementDb.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index(string searchString)
-        {
-            IQueryable<Customer> customers = _context.Customers;
 
-            if (!string.IsNullOrEmpty(searchString))
+        // GET: Customers
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
+        {
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["NumberSortParm"] = sortOrder == "number_desc" ? "number" : "number_desc";
+
+            var customers = from s in _context.Customers
+                            select s;
+
+            if (!String.IsNullOrEmpty(searchString))
             {
                 customers = customers.Where(s => s.CustomerName.Contains(searchString)
-                                              || s.CustomerAddress.Contains(searchString));
+                                            || s.CustomerAddress.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    customers = customers.OrderByDescending(s => s.CustomerName);
+                    break;
+                case "number":
+                    customers = customers.OrderBy(s => s.CustomerNumber);
+                    break;
+                case "number_desc":
+                    customers = customers.OrderByDescending(s => s.CustomerNumber);
+                    break;
+                default:
+                    customers = customers.OrderBy(s => s.CustomerName);
+                    break;
             }
 
             return View(await customers.ToListAsync());
         }
-
-
 
         // GET: Customers/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -58,13 +78,11 @@ namespace CouriersManagementDb.Controllers
         }
 
         // POST: Customers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomerId,CustomerName,CustomerAddress,CustomerNumber")] Customer customer)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
@@ -90,9 +108,6 @@ namespace CouriersManagementDb.Controllers
         }
 
         // POST: Customers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CustomerId,CustomerName,CustomerAddress,CustomerNumber")] Customer customer)
@@ -102,7 +117,7 @@ namespace CouriersManagementDb.Controllers
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -149,11 +164,7 @@ namespace CouriersManagementDb.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
-            if (customer != null)
-            {
-                _context.Customers.Remove(customer);
-            }
-
+            _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
