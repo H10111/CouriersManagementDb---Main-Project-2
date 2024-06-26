@@ -20,19 +20,62 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Couriers
-        public async Task<IActionResult> Index(string searchString)
+        // This method allows sorting and filtering of couriers in the index view.
+        public async Task<IActionResult> Index(string searchString, string sortOrder, string currentFilter, int? pageNumber)
         {
-            var couriers = from m in _context.Couriers
-                           select m;
+            // ViewData variables to maintain the state of sort orders and search filters in the view
+            
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["LastNameSortParm"] = sortOrder == "last_asc" ? "last_desc" : "last_asc";
+            ViewData["EmailSortParm"] = sortOrder == "email_asc" ? "email_desc" : "email_asc";
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+            // Query all couriers from the context
+            var couriers = from c in _context.Couriers
+                           select c;
 
+            // Filter couriers when searchString is not empty
             if (!String.IsNullOrEmpty(searchString))
             {
-                couriers = couriers.Where(s => s.DriverName.Contains(searchString)
-                                            || s.DriverNumber.Contains(searchString));
+                couriers = couriers.Where(s => s.FirstName.Contains(searchString)
+                                       || s.LastName.Contains(searchString)
+                                       || s.Email.Contains(searchString));
             }
 
-            return View(await couriers.ToListAsync());
+            // Apply sorting based on sortOrder parameter
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    couriers = couriers.OrderByDescending(s => s.FirstName);
+                    break;
+                case "last_asc":
+                    couriers = couriers.OrderBy(s => s.LastName);
+                    break;
+                case "last_desc":
+                    couriers = couriers.OrderByDescending(s => s.LastName);
+                    break;
+                case "email_asc":
+                    couriers = couriers.OrderBy(s => s.Email);
+                    break;
+                case "email_desc":
+                    couriers = couriers.OrderByDescending(s => s.Email);
+                    break;
+                default:
+                    couriers = couriers.OrderBy(s => s.FirstName);
+                    break;
+            }
+            int pageSize = 3; 
+            // Return the view with the sorted and/or filtered list of couriers
+            return View(await PaginatedList<Courier>.CreateAsync(couriers.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
+
 
         // GET: Couriers/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -63,7 +106,7 @@ namespace CouriersManagementDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CourierID,DriverName,DriverNumber")] Courier courier)
+        public async Task<IActionResult> Create([Bind("CourierID,FirstName,LastName,Email,PhoneNumber,BaseLocation")] Courier courier)
         {
             if (!ModelState.IsValid)
             {
@@ -95,7 +138,7 @@ namespace CouriersManagementDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CourierID,DriverName,DriverNumber")] Courier courier)
+        public async Task<IActionResult> Edit(int id, [Bind("CourierID,FirstName,LastName,Email,PhoneNumber,BaseLocation")] Courier courier)
         {
             if (id != courier.CourierID)
             {

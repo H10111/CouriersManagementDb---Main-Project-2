@@ -13,7 +13,6 @@ namespace CouriersManagementDb.Controllers
     public class PaymentsController : Controller
     {
         private readonly CouriersManagementDbContext _context;
-        private string? amountRange;
 
         public PaymentsController(CouriersManagementDbContext context)
         {
@@ -21,49 +20,11 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Payments
-        public async Task<IActionResult> Index(string searchString, decimal? minAmount, decimal? maxAmount, DateTime? startDate, DateTime? endDate)
+        public async Task<IActionResult> Index()
         {
-            var paymentsQuery = _context.Payments
-                .Include(p => p.Customers)
-                .Include(p => p.Packages)
-                .Include(p => p.Shipments)
-                .Include(p => p.Employee)
-                .AsQueryable();
-
-            // Filtering by search string
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                paymentsQuery = paymentsQuery.Where(p =>
-                    p.Customers.CustomerName.Contains(searchString) ||
-                    p.Packages.Contents.Contains(searchString) ||
-                    p.Shipments.DeliveryStatus.ToString().Contains(searchString));
-            }
-
-            // Filtering by amount range
-            if (minAmount.HasValue)
-            {
-                paymentsQuery = paymentsQuery.Where(p => p.Amount >= minAmount.Value);
-            }
-            if (maxAmount.HasValue)
-            {
-                paymentsQuery = paymentsQuery.Where(p => p.Amount <= maxAmount.Value);
-            }
-
-            // Filtering by date range
-            if (startDate.HasValue)
-            {
-                paymentsQuery = paymentsQuery.Where(p => p.Timestamp >= startDate.Value);
-            }
-            if (endDate.HasValue)
-            {
-                paymentsQuery = paymentsQuery.Where(p => p.Timestamp <= endDate.Value);
-            }
-
-            return View(await paymentsQuery.ToListAsync());
+            var couriersManagementDbContext = _context.Payments.Include(p => p.Customers).Include(p => p.Employee).Include(p => p.Packages).Include(p => p.Shipments);
+            return View(await couriersManagementDbContext.ToListAsync());
         }
-
-
-
 
         // GET: Payments/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -90,14 +51,19 @@ namespace CouriersManagementDb.Controllers
         // GET: Payments/Create
         public IActionResult Create()
         {
-            PopulateDropDowns();
+            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "Address");
+            ViewData["EmployeeID"] = new SelectList(_context.Employees, "EmployeeID", "Email");
+            ViewData["PackageID"] = new SelectList(_context.Packages, "PackageID", "Contents");
+            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "ShipmentID");
             return View();
         }
 
         // POST: Payments/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PaymentID,Timestamp,Amount,ShipmentID,PackageID,CustomerID,EmployeeID")] Payment payment)
+        public async Task<IActionResult> Create([Bind("PaymentID,PaymentDate,Amount,ShipmentID,PackageID,CustomerID,EmployeeID")] Payment payment)
         {
             if (!ModelState.IsValid)
             {
@@ -105,7 +71,10 @@ namespace CouriersManagementDb.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            PopulateDropDowns(payment);
+            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "Address", payment.CustomerID);
+            ViewData["EmployeeID"] = new SelectList(_context.Employees, "EmployeeID", "Email", payment.EmployeeID);
+            ViewData["PackageID"] = new SelectList(_context.Packages, "PackageID", "Contents", payment.PackageID);
+            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "ShipmentID", payment.ShipmentID);
             return View(payment);
         }
 
@@ -122,14 +91,19 @@ namespace CouriersManagementDb.Controllers
             {
                 return NotFound();
             }
-            PopulateDropDowns(payment);
+            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "Address", payment.CustomerID);
+            ViewData["EmployeeID"] = new SelectList(_context.Employees, "EmployeeID", "Email", payment.EmployeeID);
+            ViewData["PackageID"] = new SelectList(_context.Packages, "PackageID", "Contents", payment.PackageID);
+            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "ShipmentID", payment.ShipmentID);
             return View(payment);
         }
 
         // POST: Payments/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PaymentID,Timestamp,Amount,ShipmentID,PackageID,CustomerID,EmployeeID")] Payment payment)
+        public async Task<IActionResult> Edit(int id, [Bind("PaymentID,PaymentDate,Amount,ShipmentID,PackageID,CustomerID,EmployeeID")] Payment payment)
         {
             if (id != payment.PaymentID)
             {
@@ -156,7 +130,10 @@ namespace CouriersManagementDb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            PopulateDropDowns(payment);
+            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "Address", payment.CustomerID);
+            ViewData["EmployeeID"] = new SelectList(_context.Employees, "EmployeeID", "Email", payment.EmployeeID);
+            ViewData["PackageID"] = new SelectList(_context.Packages, "PackageID", "Contents", payment.PackageID);
+            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "ShipmentID", payment.ShipmentID);
             return View(payment);
         }
 
@@ -188,7 +165,11 @@ namespace CouriersManagementDb.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var payment = await _context.Payments.FindAsync(id);
-            _context.Payments.Remove(payment);
+            if (payment != null)
+            {
+                _context.Payments.Remove(payment);
+            }
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -196,14 +177,6 @@ namespace CouriersManagementDb.Controllers
         private bool PaymentExists(int id)
         {
             return _context.Payments.Any(e => e.PaymentID == id);
-        }
-
-        private void PopulateDropDowns(Payment payment = null)
-        {
-            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerId", "CustomerName", payment?.CustomerID);
-            ViewData["EmployeeID"] = new SelectList(_context.Employees, "EmployeeID", "EmployeeName", payment?.EmployeeID);
-            ViewData["PackageID"] = new SelectList(_context.Packages, "PackageID", "Contents", payment?.PackageID);
-            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "DeliveryStatus", payment?.ShipmentID);
         }
     }
 }

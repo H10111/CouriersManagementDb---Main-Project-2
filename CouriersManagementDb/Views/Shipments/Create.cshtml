@@ -1,5 +1,4 @@
-﻿@using static CouriersManagementDb.Models.Shipment
-@model CouriersManagementDb.Models.Shipment
+﻿@model CouriersManagementDb.Models.Shipment
 
 @{
     ViewData["Title"] = "Create";
@@ -14,14 +13,19 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="DeliveryStatus" class="control-label">Delivery Status</label>
-                <select asp-for="DeliveryStatus" class="form-control" asp-items="Html.GetEnumSelectList<DeliveryStatusEnum>()"></select>
+                <label asp-for="DeliveryStatus" class="control-label"></label>
+                <select asp-items="Html.GetEnumSelectList<DeliveryStatusEnum>()" asp-for="DeliveryStatus" class="form-control"></select>
                 <span asp-validation-for="DeliveryStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ArrivalDate" class="control-label"></label>
                 <input asp-for="ArrivalDate" class="form-control" />
                 <span asp-validation-for="ArrivalDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DispatchDate" class="control-label"></label>
+                <input asp-for="DispatchDate" class="form-control" />
+                <span asp-validation-for="DispatchDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CourierID" class="control-label"></label>

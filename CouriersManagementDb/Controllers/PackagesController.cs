@@ -20,21 +20,12 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Packages
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index()
         {
-            IQueryable<Package> packages = _context.Packages
-                .Include(p => p.Shipments)
-                .Include(p => p.Pallet);
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                packages = packages.Where(p => p.Dimensions.Contains(searchString)
-                                            || p.Contents.Contains(searchString)
-                                            || p.DeliveryStatus.Contains(searchString));
-            }
-
-            return View(await packages.ToListAsync());
+            var couriersManagementDbContext = _context.Packages.Include(p => p.Shipments);
+            return View(await couriersManagementDbContext.ToListAsync());
         }
+
         // GET: Packages/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -44,7 +35,6 @@ namespace CouriersManagementDb.Controllers
             }
 
             var package = await _context.Packages
-                .Include(p => p.Pallet)
                 .Include(p => p.Shipments)
                 .FirstOrDefaultAsync(m => m.PackageID == id);
             if (package == null)
@@ -58,8 +48,7 @@ namespace CouriersManagementDb.Controllers
         // GET: Packages/Create
         public IActionResult Create()
         {
-            ViewData["PalletID"] = new SelectList(_context.Pallets, "PalletID", "PalletID");
-            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "DeliveryStatus");
+            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "ShipmentID");
             return View();
         }
 
@@ -68,7 +57,7 @@ namespace CouriersManagementDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PackageID,Dimensions,Contents,DeliveryStatus,ShipmentID,PalletID")] Package package)
+        public async Task<IActionResult> Create([Bind("PackageID,Dimensions,Contents,Weight,Type,ShipmentID")] Package package)
         {
             if (!ModelState.IsValid)
             {
@@ -76,8 +65,7 @@ namespace CouriersManagementDb.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PalletID"] = new SelectList(_context.Pallets, "PalletID", "PalletID", package.PalletID);
-            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "DeliveryStatus", package.ShipmentID);
+            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "ShipmentID", package.ShipmentID);
             return View(package);
         }
 
@@ -94,8 +82,7 @@ namespace CouriersManagementDb.Controllers
             {
                 return NotFound();
             }
-            ViewData["PalletID"] = new SelectList(_context.Pallets, "PalletID", "PalletID", package.PalletID);
-            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "DeliveryStatus", package.ShipmentID);
+            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "ShipmentID", package.ShipmentID);
             return View(package);
         }
 
@@ -104,7 +91,7 @@ namespace CouriersManagementDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PackageID,Dimensions,Contents,DeliveryStatus,ShipmentID,PalletID")] Package package)
+        public async Task<IActionResult> Edit(int id, [Bind("PackageID,Dimensions,Contents,Weight,Type,ShipmentID")] Package package)
         {
             if (id != package.PackageID)
             {
@@ -131,8 +118,7 @@ namespace CouriersManagementDb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PalletID"] = new SelectList(_context.Pallets, "PalletID", "PalletID", package.PalletID);
-            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "DeliveryStatus", package.ShipmentID);
+            ViewData["ShipmentID"] = new SelectList(_context.Shipments, "ShipmentID", "ShipmentID", package.ShipmentID);
             return View(package);
         }
 
@@ -145,7 +131,6 @@ namespace CouriersManagementDb.Controllers
             }
 
             var package = await _context.Packages
-                .Include(p => p.Pallet)
                 .Include(p => p.Shipments)
                 .FirstOrDefaultAsync(m => m.PackageID == id);
             if (package == null)

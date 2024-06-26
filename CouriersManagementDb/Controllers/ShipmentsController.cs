@@ -20,22 +20,10 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Shipments
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index()
         {
-            IQueryable<Shipment> shipments = _context.Shipments
-                .Include(s => s.Courier)
-                .Include(s => s.Customer);
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                shipments = shipments.Where(s => s.Courier.DriverName.Contains(searchString)
-                                              || s.Customer.CustomerName.Contains(searchString)
-                                              || s.Customer.CustomerAddress.Contains(searchString)
-                                              || s.DeliveryStatus.ToString().Contains(searchString)
-                                              || EF.Functions.Like(s.ArrivalDate.ToString(), $"%{searchString}%"));
-            }
-
-            return View(await shipments.ToListAsync());
+            var couriersManagementDbContext = _context.Shipments.Include(s => s.Courier).Include(s => s.Customer);
+            return View(await couriersManagementDbContext.ToListAsync());
         }
 
         // GET: Shipments/Details/5
@@ -61,8 +49,8 @@ namespace CouriersManagementDb.Controllers
         // GET: Shipments/Create
         public IActionResult Create()
         {
-            ViewData["CourierID"] = new SelectList(_context.Couriers, "CourierID", "DriverName");
-            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerId", "CustomerAddress");
+            ViewData["CourierID"] = new SelectList(_context.Couriers, "CourierID", "BaseLocation");
+            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "Address");
             return View();
         }
 
@@ -71,7 +59,7 @@ namespace CouriersManagementDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ShipmentID,DeliveryStatus,ArrivalDate,CourierID,CustomerID")] Shipment shipment)
+        public async Task<IActionResult> Create([Bind("ShipmentID,DeliveryStatus,ArrivalDate,DispatchDate,CourierID,CustomerID")] Shipment shipment)
         {
             if (!ModelState.IsValid)
             {
@@ -79,8 +67,8 @@ namespace CouriersManagementDb.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourierID"] = new SelectList(_context.Couriers, "CourierID", "DriverName", shipment.CourierID);
-            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerId", "CustomerAddress", shipment.CustomerID);
+            ViewData["CourierID"] = new SelectList(_context.Couriers, "CourierID", "BaseLocation", shipment.CourierID);
+            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "Address", shipment.CustomerID);
             return View(shipment);
         }
 
@@ -97,8 +85,8 @@ namespace CouriersManagementDb.Controllers
             {
                 return NotFound();
             }
-            ViewData["CourierID"] = new SelectList(_context.Couriers, "CourierID", "DriverName", shipment.CourierID);
-            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerId", "CustomerAddress", shipment.CustomerID);
+            ViewData["CourierID"] = new SelectList(_context.Couriers, "CourierID", "BaseLocation", shipment.CourierID);
+            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "Address", shipment.CustomerID);
             return View(shipment);
         }
 
@@ -107,7 +95,7 @@ namespace CouriersManagementDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ShipmentID,DeliveryStatus,ArrivalDate,CourierID,CustomerID")] Shipment shipment)
+        public async Task<IActionResult> Edit(int id, [Bind("ShipmentID,DeliveryStatus,ArrivalDate,DispatchDate,CourierID,CustomerID")] Shipment shipment)
         {
             if (id != shipment.ShipmentID)
             {
@@ -134,8 +122,8 @@ namespace CouriersManagementDb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourierID"] = new SelectList(_context.Couriers, "CourierID", "DriverName", shipment.CourierID);
-            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerId", "CustomerAddress", shipment.CustomerID);
+            ViewData["CourierID"] = new SelectList(_context.Couriers, "CourierID", "BaseLocation", shipment.CourierID);
+            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "Address", shipment.CustomerID);
             return View(shipment);
         }
 

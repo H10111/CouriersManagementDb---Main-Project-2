@@ -20,19 +20,41 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
-            IQueryable<Employee> employees = _context.Employees;
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["RoleSortParm"] = sortOrder == "Role" ? "role_desc" : "Role";
+
+            IQueryable<Employee> employees = from e in _context.Employees
+                                             select e;
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                employees = employees.Where(s => s.EmployeeName.Contains(searchString)
-                                              || s.Role.Contains(searchString)
-                                              || s.EmployeeNumber.Contains(searchString));
+                employees = employees.Where(e => e.FirstName.Contains(searchString)
+                                               || e.LastName.Contains(searchString)
+                                               || e.Email.Contains(searchString));
             }
 
-            return View(await employees.ToListAsync());
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    employees = employees.OrderByDescending(e => e.FirstName).ThenByDescending(e => e.LastName);
+                    break;
+                case "Role":
+                    employees = employees.OrderBy(e => e.Role);
+                    break;
+                case "role_desc":
+                    employees = employees.OrderByDescending(e => e.Role);
+                    break;
+                default:
+                    employees = employees.OrderBy(e => e.FirstName).ThenBy(e => e.LastName);
+                    break;
+            }
+
+            return View(await employees.AsNoTracking().ToListAsync());
         }
+
 
         // GET: Employees/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -63,7 +85,7 @@ namespace CouriersManagementDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeeID,EmployeeName,Role,EmployeeNumber")] Employee employee)
+        public async Task<IActionResult> Create([Bind("EmployeeID,FirstName,LastName,Email,PhoneNumber,Role")] Employee employee)
         {
             if (!ModelState.IsValid)
             {
@@ -95,7 +117,7 @@ namespace CouriersManagementDb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EmployeeID,EmployeeName,Role,EmployeeNumber")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("EmployeeID,FirstName,LastName,Email,PhoneNumber,Role")] Employee employee)
         {
             if (id != employee.EmployeeID)
             {

@@ -20,7 +20,6 @@ public class CouriersManagementDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Employee> Employees { get; set; }
     public DbSet<Location> Locations { get; set; }
     public DbSet<Tracking> Trackings { get; set; }
-    public DbSet<Pallet> Pallets { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -50,8 +49,7 @@ public class CouriersManagementDbContext : IdentityDbContext<ApplicationUser>
         .HasForeignKey(p => p.ShipmentID)
         .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Payment>().Ignore(p => p.DeliveryStatus);
-        modelBuilder.Entity<Payment>().Ignore(p => p.Contents);
+        
         // Customize the ASP.NET Identity model and override the defaults if needed.
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);

@@ -1,14 +1,27 @@
 ﻿@model IEnumerable<CouriersManagementDb.Models.Employee>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Employee Index";
+    var nameSortParam = ViewData["NameSortParam"] as string ?? "name_asc";
+    var emailSortParam = ViewData["EmailSortParam"] as string ?? "email_asc";
 }
 
 <h1>Employees</h1>
-<form asp-action="Index" method="get">
+
+<form asp-action="Index" method="get" class="form-inline">
     <div class="form-group">
-        <input type="text" name="searchString" class="form-control" placeholder="Search by name, role, or number" />
-        <button type="submit" class="btn btn-primary">Search</button>
+        <!-- Search input for filtering employees -->
+        <input type="text" name="searchString" class="form-control" placeholder="Search by name, email, or role" value="@ViewData["CurrentFilter"]" />
+        <!-- Dropdown for sorting options -->
+        <select name="sortOrder" class="form-control">
+            <option value="NameAsc">Name Ascending</option>
+            <option value="NameDesc">Name Descending</option>
+            <option value="EmailAsc">Email Ascending</option>
+            <option value="EmailDesc">Email Descending</option>
+            <option value="RoleAsc">Role Ascending</option>
+            <option value="RoleDesc">Role Descending</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Search and Sort</button>
     </div>
 </form>
 
@@ -19,35 +32,48 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.EmployeeName)
+                <a asp-action="Index" asp-route-sortOrder="@nameSortParam">First Name</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@nameSortParam">Last Name</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@emailSortParam">Email</a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Role)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmployeeNumber)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmployeeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmployeeNumber)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.EmployeeID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.EmployeeID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.EmployeeID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Role)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.EmployeeID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.EmployeeID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.EmployeeID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

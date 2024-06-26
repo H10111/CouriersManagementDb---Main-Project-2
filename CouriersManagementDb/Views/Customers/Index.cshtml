@@ -2,21 +2,22 @@
 
 @{
     ViewData["Title"] = "Index";
-    var nameSortParam = ViewData["NameSortParm"]?.ToString() == "name_desc" ? "Name" : "name_desc";
-    var numberSortParam = ViewData["NumberSortParm"]?.ToString() == "number_desc" ? "Number" : "number_desc";
+    var nameSortParam = ViewData["NameSortParm"] as string ?? "name_asc";
+    var emailSortParam = ViewData["EmailSortParm"] as string ?? "email_asc";
 }
 
 <h1>Customers</h1>
 
-<form asp-action="Index" method="get">
+<form asp-action="Index" method="get" class="form-inline">
     <div class="form-group">
-        <input type="text" name="searchString" class="form-control" placeholder="Search by name or address" />
-        <select name="sortOrder" onchange="this.form.submit()" class="form-control">
-            <option value="">Sort by</option>
-            <option value="@nameSortParam">Name @(nameSortParam == "Name" ? "Ascending" : "Descending")</option>
-            <option value="@numberSortParam">Number @(numberSortParam == "Number" ? "Ascending" : "Descending")</option>
+        <input type="text" name="searchString" class="form-control" placeholder="Search by name or email" value="@ViewData["CurrentFilter"]" />
+        <select name="sortOrder" class="form-control">
+            <option value="NameAsc">Name Ascending</option>
+            <option value="NameDesc">Name Descending</option>
+            <option value="EmailAsc">Email Ascending</option>
+            <option value="EmailDesc">Email Descending</option>
         </select>
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-primary">Search and Sort</button>
     </div>
 </form>
 
@@ -27,13 +28,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CustomerName)
+                <a asp-action="Index" asp-route-sortOrder="@nameSortParam">Name</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CustomerAddress)
+                <a asp-action="Index" asp-route-sortOrder="@emailSortParam">Email</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CustomerNumber)
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
             </th>
             <th></th>
         </tr>
@@ -41,20 +45,23 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>    
+            <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CustomerName)
+                    @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CustomerAddress)
+                    @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CustomerNumber)
+                    @Html.DisplayFor(modelItem => item.Address)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.CustomerId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.CustomerId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.CustomerId">Delete</a>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CustomerID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CustomerID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CustomerID">Delete</a>
                 </td>
             </tr>
         }

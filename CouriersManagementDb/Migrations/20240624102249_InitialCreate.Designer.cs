@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CouriersManagementDb.Migrations
 {
     [DbContext(typeof(CouriersManagementDbContext))]
-    [Migration("20240623222748_sortingCustomer")]
-    partial class sortingCustomer
+    [Migration("20240624102249_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -106,15 +106,28 @@ namespace CouriersManagementDb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourierID"));
 
-                    b.Property<string>("DriverName")
+                    b.Property<string>("BaseLocation")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("DriverNumber")
+                    b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CourierID");
 
@@ -123,28 +136,36 @@ namespace CouriersManagementDb.Migrations
 
             modelBuilder.Entity("CouriersManagementDb.Models.Customer", b =>
                 {
-                    b.Property<int>("CustomerId")
+                    b.Property<int>("CustomerID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerID"));
 
-                    b.Property<string>("CustomerAddress")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("CustomerName")
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("CustomerNumber")
+                    b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("CustomerId");
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CustomerID");
 
                     b.ToTable("Customers");
                 });
@@ -157,19 +178,28 @@ namespace CouriersManagementDb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeID"));
 
-                    b.Property<string>("EmployeeName")
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("EmployeeNumber")
+                    b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("EmployeeID");
 
@@ -184,17 +214,41 @@ namespace CouriersManagementDb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LocationID"));
 
-                    b.Property<string>("CustomerAddress")
+                    b.Property<string>("AddressLine1")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("CustomerName")
+                    b.Property<string>("AddressLine2")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("CustomerID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StateOrProvince")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("LocationID");
+
+                    b.HasIndex("CustomerID");
 
                     b.ToTable("Locations");
                 });
@@ -212,47 +266,25 @@ namespace CouriersManagementDb.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("DeliveryStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Dimensions")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<int>("PalletID")
-                        .HasColumnType("int");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("ShipmentID")
                         .HasColumnType("int");
 
-                    b.HasKey("PackageID");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
-                    b.HasIndex("PalletID");
+                    b.Property<double>("Weight")
+                        .HasColumnType("float");
+
+                    b.HasKey("PackageID");
 
                     b.HasIndex("ShipmentID");
 
                     b.ToTable("Packages");
-                });
-
-            modelBuilder.Entity("CouriersManagementDb.Models.Pallet", b =>
-                {
-                    b.Property<int>("PalletID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PalletID"));
-
-                    b.Property<int?>("CourierID")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.HasKey("PalletID");
-
-                    b.HasIndex("CourierID");
-
-                    b.ToTable("Pallets");
                 });
 
             modelBuilder.Entity("CouriersManagementDb.Models.Payment", b =>
@@ -265,7 +297,7 @@ namespace CouriersManagementDb.Migrations
 
                     b.Property<decimal>("Amount")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<int?>("CourierID")
                         .HasColumnType("int");
@@ -279,11 +311,11 @@ namespace CouriersManagementDb.Migrations
                     b.Property<int>("PackageID")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("ShipmentID")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("PaymentID");
 
@@ -320,6 +352,9 @@ namespace CouriersManagementDb.Migrations
                     b.Property<int>("DeliveryStatus")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("DispatchDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("ShipmentID");
 
                     b.HasIndex("CourierID");
@@ -337,9 +372,8 @@ namespace CouriersManagementDb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrackingID"));
 
-                    b.Property<string>("DeliveryStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DeliveryStatus")
+                        .HasColumnType("int");
 
                     b.Property<int>("LocationID")
                         .HasColumnType("int");
@@ -496,34 +530,26 @@ namespace CouriersManagementDb.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CouriersManagementDb.Models.Package", b =>
+            modelBuilder.Entity("CouriersManagementDb.Models.Location", b =>
                 {
-                    b.HasOne("CouriersManagementDb.Models.Pallet", "Pallet")
-                        .WithMany("Packages")
-                        .HasForeignKey("PalletID")
+                    b.HasOne("CouriersManagementDb.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("CouriersManagementDb.Models.Package", b =>
+                {
                     b.HasOne("CouriersManagementDb.Models.Shipment", "Shipments")
                         .WithMany("Packages")
                         .HasForeignKey("ShipmentID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Pallet");
-
                     b.Navigation("Shipments");
-                });
-
-            modelBuilder.Entity("CouriersManagementDb.Models.Pallet", b =>
-                {
-                    b.HasOne("CouriersManagementDb.Models.Courier", "Courier")
-                        .WithMany("Pallets")
-                        .HasForeignKey("CourierID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Courier");
                 });
 
             modelBuilder.Entity("CouriersManagementDb.Models.Payment", b =>
@@ -656,8 +682,6 @@ namespace CouriersManagementDb.Migrations
 
             modelBuilder.Entity("CouriersManagementDb.Models.Courier", b =>
                 {
-                    b.Navigation("Pallets");
-
                     b.Navigation("Payments");
 
                     b.Navigation("Shipments");
@@ -673,11 +697,6 @@ namespace CouriersManagementDb.Migrations
             modelBuilder.Entity("CouriersManagementDb.Models.Employee", b =>
                 {
                     b.Navigation("payments");
-                });
-
-            modelBuilder.Entity("CouriersManagementDb.Models.Pallet", b =>
-                {
-                    b.Navigation("Packages");
                 });
 
             modelBuilder.Entity("CouriersManagementDb.Models.Shipment", b =>

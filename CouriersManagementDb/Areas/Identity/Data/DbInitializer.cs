@@ -17,11 +17,10 @@ public static class DbInitializer
 
         var customers = new Customer[]
         {
-            new Customer {CustomerName = "John Doe", CustomerAddress = "123 Elm Street", CustomerNumber = "1234567890" },
-            new Customer {CustomerName = "Jane Smith", CustomerAddress = "456 Oak Road", CustomerNumber = "1987654321" },
-            new Customer {CustomerName = "Alice Johnson", CustomerAddress = "789 Pine Lane", CustomerNumber = "1346798520" },
-            new Customer {CustomerName = "Bob Brown", CustomerAddress = "321 Maple Ave", CustomerNumber = "1648392746" },
-            new Customer {CustomerName = "Jamal", CustomerAddress="123 Hippo lake", CustomerNumber="12345677901"}
+                new Customer { FirstName = "John", LastName = "Doe", Email = "john.doe@example.com", Address = "123 Elm St", PhoneNumber = "123-456-7890" },
+                new Customer { FirstName = "Jane", LastName = "Smith", Email = "jane.smith@example.com", Address = "456 Oak St", PhoneNumber = "987-654-3210" },
+                new Customer { FirstName = "Alice", LastName = "Johnson", Email = "alice.johnson@example.com", Address = "789 Pine St", PhoneNumber = "564-738-2910" },
+                new Customer { FirstName = "Bob", LastName = "Brown", Email = "bob.brown@example.com", Address = "321 Maple St", PhoneNumber = "102-456-7890" }
         };
 
         foreach (Customer c in customers)

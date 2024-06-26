@@ -1,17 +1,29 @@
-﻿@model IEnumerable<CouriersManagementDb.Models.Courier>
+﻿@model PaginatedList<CouriersManagementDb.Models.Courier>
+
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Courier Index";
+    var nameSortParam = ViewData["NameSortParam"] as string ?? "name_asc";
+    var emailSortParam = ViewData["EmailSortParam"] as string ?? "email_asc";
 }
 
-<h1>Courier Drivers</h1>
+<h1>Couriers</h1>
 
-<form asp-action="Index" method="get">
+<form asp-action="Index" method="get" class="form-inline">
     <div class="form-group">
-        <input type="text" name="searchString" class="form-control" placeholder="Search by name or number" />
-        <button type="submit" class="btn btn-primary">Search</button>
+        <input type="text" name="searchString" class="form-control" placeholder="Search by name, email, or base location" value="@ViewData["CurrentFilter"]" />
+        <select name="sortOrder" class="form-control">
+            <option value="NameAsc">Name Ascending</option>
+            <option value="NameDesc">Name Descending</option>
+            <option value="EmailAsc">Email Ascending</option>
+            <option value="EmailDesc">Email Descending</option>
+            <option value="BaseLocationAsc">Base Location Ascending</option>
+            <option value="BaseLocationDesc">Base Location Descending</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Search and Sort</button>
     </div>
 </form>
+
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -20,10 +32,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.DriverName)
+                <a asp-action="Index" asp-route-sortOrder="@nameSortParam">First Name</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DriverNumber)
+                <a asp-action="Index" asp-route-sortOrder="@nameSortParam">Last Name</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@emailSortParam">Email</a>
+            </th>
+            <th>
+                Phone Number 
+            </th>
+            <th>
+                BaseLocation
             </th>
             <th></th>
         </tr>
@@ -32,10 +53,19 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.DriverName)
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>    
+                @Html.DisplayFor(modelItem => item.LastName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DriverNumber)
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BaseLocation)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CourierID">Edit</a> |

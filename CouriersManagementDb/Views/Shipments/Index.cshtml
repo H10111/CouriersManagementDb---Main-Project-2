@@ -5,12 +5,6 @@
 }
 
 <h1>Shipments</h1>
-<form asp-action="Index" method="get">
-    <div class="form-group">
-        <input type="text" name="searchString" class="form-control" placeholder="Search by delivery status, courier name, customer details, or date" />
-        <button type="submit" class="btn btn-primary">Search</button>
-    </div>
-</form>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -25,6 +19,9 @@
                 @Html.DisplayNameFor(model => model.ArrivalDate)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.DispatchDate)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Courier)
             </th>
             <th>
@@ -34,20 +31,22 @@
         </tr>
     </thead>
     <tbody>
-
 @foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.DeliveryStatus)
-           </td>
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ArrivalDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Courier.DriverName)
+                @Html.DisplayFor(modelItem => item.DispatchDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Customer.CustomerAddress)
+                @Html.DisplayFor(modelItem => item.Courier.BaseLocation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Address)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ShipmentID">Edit</a> |

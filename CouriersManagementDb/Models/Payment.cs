@@ -6,16 +6,22 @@ namespace CouriersManagementDb.Models
     public class Payment
     {
         [Key]
+        // Primary key for the Payment entity
         public int PaymentID { get; set; }
 
-        [DataType(DataType.Date)]
-        [Required(ErrorMessage = "Arrival date is required")]
-        [FutureDate(ErrorMessage = "Arrival date must be in the future")]
-        public DateTime Timestamp { get; set; }
+        [DataType(DataType.DateTime)]
+        [Required(ErrorMessage = "The timestamp of the payment is required.")]
+        // Custom validation to ensure the payment date is within a valid range.
+        [ValidPaymentDate(ErrorMessage = "The payment date must be within valid range and cannot be set in the distant past or future.")]
+        [Display(Name = "Payment Timestamp")]
+        public DateTime PaymentDate { get; set; }
 
         [Required(ErrorMessage = "Amount is required.")]
-        [Range(0.01, 10000.00, ErrorMessage = "Amount must be between $0.01 and $10,000.00.")]
-        [RegularExpression(@"^\d+(\.\d{1,2})?$", ErrorMessage = "Amount must have up to two decimal places.")]
+        [Range(0.01, 10000.00, ErrorMessage = "Amount must be between $0.01 and $10,000.")]
+        [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(18, 2)")]
+        [Display(Name = "Amount Paid")]
+        // Ensures the amount is stored with two decimal places, suitable for currency.
         public decimal Amount { get; set; }
 
         // Foreign keys
@@ -37,28 +43,24 @@ namespace CouriersManagementDb.Models
 
         public virtual Employee Employee { get; set; }
 
-        [NotMapped]
-        public object Contents { get; internal set; }
-        [NotMapped]
-        public object DeliveryStatus { get; internal set; }
     }
-}
-public class FutureDateAttribute : ValidationAttribute
-{
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    public class ValidPaymentDateAttribute : ValidationAttribute
     {
-        if (value is DateTime dateTimeValue)
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if (dateTimeValue < DateTime.Today)
-            {
-                return new ValidationResult(GetErrorMessage(validationContext.DisplayName));
-            }
-        }
-        return ValidationResult.Success;
-    }
+            var date = (DateTime)value;
+            // Set a reasonable range for payment dates: not before 2000 and not more than 1 year in the future
+            var lowerLimit = new DateTime(2000, 1, 1);
+            var upperLimit = DateTime.Today.AddYears(1); // Can be one year in the future
 
-    private string GetErrorMessage(string fieldName)
-    {
-        return $"{fieldName} must be in the future.";
+            if (date < lowerLimit || date > upperLimit)
+            {
+                // If date is out of range, return an error message defined in the attribute usage
+                return new ValidationResult(ErrorMessage);
+            }
+
+            // If date is valid, return success
+            return ValidationResult.Success;
+        }
     }
 }

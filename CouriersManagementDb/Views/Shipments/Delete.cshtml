@@ -24,16 +24,22 @@
             @Html.DisplayFor(model => model.ArrivalDate)
         </dd>
         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DispatchDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DispatchDate)
+        </dd>
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Courier)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Courier.DriverName)
+            @Html.DisplayFor(model => model.Courier.BaseLocation)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Customer)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Customer.CustomerAddress)
+            @Html.DisplayFor(model => model.Customer.Address)
         </dd>
     </dl>
     

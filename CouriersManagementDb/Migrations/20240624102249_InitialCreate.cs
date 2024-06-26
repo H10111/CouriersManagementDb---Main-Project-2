@@ -58,8 +58,11 @@ namespace CouriersManagementDb.Migrations
                 {
                     CourierID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DriverName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    DriverNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BaseLocation = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,15 +73,17 @@ namespace CouriersManagementDb.Migrations
                 name: "Customers",
                 columns: table => new
                 {
-                    CustomerId = table.Column<int>(type: "int", nullable: false)
+                    CustomerID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CustomerAddress = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CustomerNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.CustomerId);
+                    table.PrimaryKey("PK_Customers", x => x.CustomerID);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,27 +92,15 @@ namespace CouriersManagementDb.Migrations
                 {
                     EmployeeID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EmployeeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmployeeNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Employees", x => x.EmployeeID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Locations",
-                columns: table => new
-                {
-                    LocationID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CustomerAddress = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Locations", x => x.LocationID);
                 });
 
             migrationBuilder.CreateTable(
@@ -217,21 +210,27 @@ namespace CouriersManagementDb.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pallets",
+                name: "Locations",
                 columns: table => new
                 {
-                    PalletID = table.Column<int>(type: "int", nullable: false)
+                    LocationID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CourierID = table.Column<int>(type: "int", nullable: false)
+                    CustomerID = table.Column<int>(type: "int", nullable: false),
+                    AddressLine1 = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    AddressLine2 = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    StateOrProvince = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pallets", x => x.PalletID);
+                    table.PrimaryKey("PK_Locations", x => x.LocationID);
                     table.ForeignKey(
-                        name: "FK_Pallets_Couriers_CourierID",
-                        column: x => x.CourierID,
-                        principalTable: "Couriers",
-                        principalColumn: "CourierID",
+                        name: "FK_Locations_Customers_CustomerID",
+                        column: x => x.CustomerID,
+                        principalTable: "Customers",
+                        principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -243,6 +242,7 @@ namespace CouriersManagementDb.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DeliveryStatus = table.Column<int>(type: "int", nullable: false),
                     ArrivalDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DispatchDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CourierID = table.Column<int>(type: "int", nullable: false),
                     CustomerID = table.Column<int>(type: "int", nullable: false)
                 },
@@ -259,7 +259,7 @@ namespace CouriersManagementDb.Migrations
                         name: "FK_Shipments_Customers_CustomerID",
                         column: x => x.CustomerID,
                         principalTable: "Customers",
-                        principalColumn: "CustomerId",
+                        principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -269,21 +269,15 @@ namespace CouriersManagementDb.Migrations
                 {
                     PackageID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Dimensions = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Dimensions = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Contents = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    DeliveryStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ShipmentID = table.Column<int>(type: "int", nullable: false),
-                    PalletID = table.Column<int>(type: "int", nullable: false)
+                    Weight = table.Column<double>(type: "float", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    ShipmentID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Packages", x => x.PackageID);
-                    table.ForeignKey(
-                        name: "FK_Packages_Pallets_PalletID",
-                        column: x => x.PalletID,
-                        principalTable: "Pallets",
-                        principalColumn: "PalletID",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Packages_Shipments_ShipmentID",
                         column: x => x.ShipmentID,
@@ -298,7 +292,7 @@ namespace CouriersManagementDb.Migrations
                 {
                     PaymentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     ShipmentID = table.Column<int>(type: "int", nullable: false),
                     PackageID = table.Column<int>(type: "int", nullable: false),
@@ -318,7 +312,7 @@ namespace CouriersManagementDb.Migrations
                         name: "FK_Payments_Customers_CustomerID",
                         column: x => x.CustomerID,
                         principalTable: "Customers",
-                        principalColumn: "CustomerId",
+                        principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Payments_Employees_EmployeeID",
@@ -346,7 +340,7 @@ namespace CouriersManagementDb.Migrations
                 {
                     TrackingID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DeliveryStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DeliveryStatus = table.Column<int>(type: "int", nullable: false),
                     Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PackageID = table.Column<int>(type: "int", nullable: false),
                     LocationID = table.Column<int>(type: "int", nullable: false)
@@ -408,19 +402,14 @@ namespace CouriersManagementDb.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Packages_PalletID",
-                table: "Packages",
-                column: "PalletID");
+                name: "IX_Locations_CustomerID",
+                table: "Locations",
+                column: "CustomerID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Packages_ShipmentID",
                 table: "Packages",
                 column: "ShipmentID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Pallets_CourierID",
-                table: "Pallets",
-                column: "CourierID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_CourierID",
@@ -506,9 +495,6 @@ namespace CouriersManagementDb.Migrations
 
             migrationBuilder.DropTable(
                 name: "Packages");
-
-            migrationBuilder.DropTable(
-                name: "Pallets");
 
             migrationBuilder.DropTable(
                 name: "Shipments");

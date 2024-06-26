@@ -22,36 +22,35 @@ namespace CouriersManagementDb.Controllers
         // GET: Customers
         public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["NumberSortParm"] = sortOrder == "number_desc" ? "number" : "number_desc";
-
-            var customers = from s in _context.Customers
-                            select s;
+            IQueryable<Customer> customers = _context.Customers;
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                customers = customers.Where(s => s.CustomerName.Contains(searchString)
-                                            || s.CustomerAddress.Contains(searchString));
+                customers = customers.Where(c =>
+                    c.FirstName.Contains(searchString) ||
+                    c.LastName.Contains(searchString) ||
+                    c.Email.Contains(searchString));
             }
 
             switch (sortOrder)
             {
-                case "name_desc":
-                    customers = customers.OrderByDescending(s => s.CustomerName);
+                case "NameAsc":
+                    customers = customers.OrderBy(c => c.FirstName).ThenBy(c => c.LastName);
                     break;
-                case "number":
-                    customers = customers.OrderBy(s => s.CustomerNumber);
+                case "NameDesc":
+                    customers = customers.OrderByDescending(c => c.FirstName).ThenByDescending(c => c.LastName);
                     break;
-                case "number_desc":
-                    customers = customers.OrderByDescending(s => s.CustomerNumber);
+                case "EmailAsc":
+                    customers = customers.OrderBy(c => c.Email);
                     break;
-                default:
-                    customers = customers.OrderBy(s => s.CustomerName);
+                case "EmailDesc":
+                    customers = customers.OrderByDescending(c => c.Email);
                     break;
             }
 
             return View(await customers.ToListAsync());
         }
+
 
         // GET: Customers/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -62,7 +61,7 @@ namespace CouriersManagementDb.Controllers
             }
 
             var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
+                .FirstOrDefaultAsync(m => m.CustomerID == id);
             if (customer == null)
             {
                 return NotFound();
@@ -78,11 +77,13 @@ namespace CouriersManagementDb.Controllers
         }
 
         // POST: Customers/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerId,CustomerName,CustomerAddress,CustomerNumber")] Customer customer)
+        public async Task<IActionResult> Create([Bind("CustomerID,FirstName,LastName,Email,Address,PhoneNumber")] Customer customer)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
@@ -108,16 +109,18 @@ namespace CouriersManagementDb.Controllers
         }
 
         // POST: Customers/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerId,CustomerName,CustomerAddress,CustomerNumber")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("CustomerID,FirstName,LastName,Email,Address,PhoneNumber")] Customer customer)
         {
-            if (id != customer.CustomerId)
+            if (id != customer.CustomerID)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
                 {
@@ -126,7 +129,7 @@ namespace CouriersManagementDb.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CustomerExists(customer.CustomerId))
+                    if (!CustomerExists(customer.CustomerID))
                     {
                         return NotFound();
                     }
@@ -149,7 +152,7 @@ namespace CouriersManagementDb.Controllers
             }
 
             var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
+                .FirstOrDefaultAsync(m => m.CustomerID == id);
             if (customer == null)
             {
                 return NotFound();
@@ -164,14 +167,18 @@ namespace CouriersManagementDb.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
-            _context.Customers.Remove(customer);
+            if (customer != null)
+            {
+                _context.Customers.Remove(customer);
+            }
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CustomerExists(int id)
         {
-            return _context.Customers.Any(e => e.CustomerId == id);
+            return _context.Customers.Any(e => e.CustomerID == id);
         }
     }
 }

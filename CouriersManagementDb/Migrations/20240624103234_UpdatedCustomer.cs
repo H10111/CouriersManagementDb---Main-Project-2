@@ -5,7 +5,7 @@
 namespace CouriersManagementDb.Migrations
 {
     /// <inheritdoc />
-    public partial class CustomerSearch : Migration
+    public partial class UpdatedCustomer : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
