@@ -6,6 +6,7 @@ using System.Linq;
 
 public static class DbInitializer
 {
+
     public static void Initialize(CouriersManagementDbContext context)
     {
         context.Database.EnsureCreated();
@@ -28,6 +29,20 @@ public static class DbInitializer
             context.Customers.Add(c);
         }
 
+        var couriers = new Courier[]
+        {
+            new Courier { FirstName = "lol", LastName = "Doe", Email = "johndoe@example.com", PhoneNumber = "123-456-7890", BaseLocation = "Auckland" },
+            new Courier { FirstName = "bobb", LastName = "Smith", Email = "janesmith@example.com", PhoneNumber = "098-765-4321", BaseLocation = "Wellington" },
+            new Courier { FirstName = "wonder", LastName = "Johnson", Email = "alicejohnson@example.com", PhoneNumber = "456-123-7890", BaseLocation = "Christchurch" },
+            new Courier { FirstName = "dutch", LastName = "Brown", Email = "bobbrown@example.com", PhoneNumber = "321-654-9870", BaseLocation = "Hamilton" }
+
+        };
+              
+
+        foreach (Courier c in couriers)
+        {
+            context.Couriers.Add(c);
+        }
 
         context.SaveChanges();
         

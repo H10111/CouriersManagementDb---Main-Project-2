@@ -20,11 +20,46 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Shipments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
-            var couriersManagementDbContext = _context.Shipments.Include(s => s.Courier).Include(s => s.Customer);
-            return View(await couriersManagementDbContext.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["DateSortParam"] = sortOrder == "DateAsc" ? "date_desc" : "DateAsc";
+            ViewData["StatusSortParam"] = sortOrder == "StatusDesc" ? "StatusAsc" : "StatusDesc";
+
+            var shipments = from s in _context.Shipments
+                            .Include(s => s.Courier)
+                            .Include(s => s.Customer)
+                            select s;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                shipments = shipments.Where(s => s.Courier.BaseLocation.Contains(searchString)
+                                                 || s.Customer.Address.Contains(searchString)
+                                                 || s.DeliveryStatus.ToString().Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "DateAsc":
+                    shipments = shipments.OrderBy(s => s.ArrivalDate);
+                    break;
+                case "date_desc":
+                    shipments = shipments.OrderByDescending(s => s.ArrivalDate);
+                    break;
+                case "StatusAsc":
+                    shipments = shipments.OrderBy(s => s.DeliveryStatus);
+                    break;
+                case "StatusDesc":
+                    shipments = shipments.OrderByDescending(s => s.DeliveryStatus);
+                    break;
+                default:
+                    shipments = shipments.OrderBy(s => s.ShipmentID);
+                    break;
+            }
+
+            return View(await shipments.ToListAsync());
         }
+
 
         // GET: Shipments/Details/5
         public async Task<IActionResult> Details(int? id)

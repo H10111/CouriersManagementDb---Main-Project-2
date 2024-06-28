@@ -20,10 +20,41 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Payments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
-            var couriersManagementDbContext = _context.Payments.Include(p => p.Customers).Include(p => p.Employee).Include(p => p.Packages).Include(p => p.Shipments);
-            return View(await couriersManagementDbContext.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["AmountSortParam"] = sortOrder == "AmountAsc" ? "AmountDesc" : "AmountAsc";  // Toggles the sort order
+
+            var paymentsQuery = _context.Payments
+                .Include(p => p.Customers)
+                .Include(p => p.Employee)
+                .Include(p => p.Packages)
+                .Include(p => p.Shipments)
+                .AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                paymentsQuery = paymentsQuery.Where(p =>
+                    p.Customers.FirstName.Contains(searchString) ||
+                    p.Customers.LastName.Contains(searchString) ||
+                    p.Employee.FirstName.Contains(searchString) ||
+                    p.Employee.LastName.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "AmountAsc":
+                    paymentsQuery = paymentsQuery.OrderBy(p => p.Amount);
+                    break;
+                case "AmountDesc":
+                    paymentsQuery = paymentsQuery.OrderByDescending(p => p.Amount);
+                    break;
+                default:
+                    paymentsQuery = paymentsQuery.OrderBy(p => p.PaymentID); // Default sorting by PaymentID
+                    break;
+            }
+
+            return View(await paymentsQuery.ToListAsync());
         }
 
         // GET: Payments/Details/5

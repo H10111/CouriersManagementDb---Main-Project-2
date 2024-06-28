@@ -20,10 +20,41 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Packages
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
-            var couriersManagementDbContext = _context.Packages.Include(p => p.Shipments);
-            return View(await couriersManagementDbContext.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["WeightSortParam"] = sortOrder == "Weight" ? "weight_desc" : "Weight";
+            ViewData["TypeSortParam"] = sortOrder == "Type" ? "type_desc" : "Type";
+
+            var packages = from p in _context.Packages.Include(p => p.Shipments)
+                           select p;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                packages = packages.Where(p => p.Contents.Contains(searchString)
+                                               || p.Dimensions.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "Weight":
+                    packages = packages.OrderBy(p => p.Weight);
+                    break;
+                case "weight_desc":
+                    packages = packages.OrderByDescending(p => p.Weight);
+                    break;
+                case "Type":
+                    packages = packages.OrderBy(p => p.Type);
+                    break;
+                case "type_desc":
+                    packages = packages.OrderByDescending(p => p.Type);
+                    break;
+                default:
+                    packages = packages.OrderBy(p => p.PackageID);
+                    break;
+            }
+
+            return View(await packages.ToListAsync());
         }
 
         // GET: Packages/Details/5

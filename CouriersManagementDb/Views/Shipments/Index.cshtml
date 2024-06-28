@@ -2,9 +2,27 @@
 
 @{
     ViewData["Title"] = "Index";
+    var statusSortParam = ViewData["StatusSortParam"] as string ?? "status_asc";
+    var dateSortParam = ViewData["DateSortParam"] as string ?? "date_asc";
+    var dispatchDateSortParam = ViewData["DispatchDateSortParam"] as string ?? "dispatch_date_asc";
 }
 
 <h1>Shipments</h1>
+
+<form asp-action="Index" method="get" class="form-inline">
+    <div class="form-group">
+        <input type="text" name="searchString" class="form-control" placeholder="Search by courier, customer or status" value="@ViewData["CurrentFilter"]" />
+        <select name="sortOrder" class="form-control">
+            <option value="status_asc">Status Ascending</option>
+            <option value="status_desc">Status Descending</option>
+            <option value="date_asc">Arrival Date Ascending</option>
+            <option value="date_desc">Arrival Date Descending</option>
+            <option value="dispatch_date_asc">Dispatch Date Ascending</option>
+            <option value="dispatch_date_desc">Dispatch Date Descending</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Search and Sort</button>
+    </div>
+</form>
 
 <p>
     <a asp-action="Create">Create New</a>
