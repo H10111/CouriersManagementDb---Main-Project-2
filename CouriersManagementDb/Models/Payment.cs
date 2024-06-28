@@ -31,7 +31,7 @@ namespace CouriersManagementDb.Models
         public int PackageID { get; set; }
         [Required]
         public int CustomerID { get; set; }
-        public int EmployeeID { get; set; } 
+        public int EmployeeID { get; set; }
 
         // Navigation properties
         [ForeignKey("ShipmentID")]
@@ -44,23 +44,28 @@ namespace CouriersManagementDb.Models
         public virtual Employee Employee { get; set; }
 
     }
-    public class ValidPaymentDateAttribute : ValidationAttribute
+}
+public class ValidPaymentDateAttribute : ValidationAttribute
+{
+    public ValidPaymentDateAttribute()
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            var date = (DateTime)value;
-            // Set a reasonable range for payment dates: not before 2000 and not more than 1 year in the future
-            var lowerLimit = new DateTime(2000, 1, 1);
-            var upperLimit = DateTime.Today.AddYears(1); // Can be one year in the future
+        // Setting a default error message
+        ErrorMessage = "The payment date must be today's date.";
+    }
 
-            if (date < lowerLimit || date > upperLimit)
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        if (value is DateTime date)
+        {
+            if (date.Date != DateTime.Today)
             {
-                // If date is out of range, return an error message defined in the attribute usage
                 return new ValidationResult(ErrorMessage);
             }
 
-            // If date is valid, return success
             return ValidationResult.Success;
         }
+
+        return new ValidationResult("Invalid data type");
     }
 }
+

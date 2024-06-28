@@ -1,0 +1,85 @@
+﻿@model IEnumerable<CouriersManagementDb.Models.Location>
+
+@{
+    ViewData["Title"] = "Locations";
+    var nameSortParam = ViewData["NameSortParm"] as string ?? "name_desc";
+    var citySortParam = ViewData["CitySortParm"] as string ?? "City";
+}
+
+<h1>Locations</h1>
+<form asp-action="Index" method="get">
+    <div class="form-group">
+        <input type="text" name="searchString" class="form-control" placeholder="Search locations" value="@ViewData["CurrentFilter"]" />
+        <select name="sortOrder" class="form-control">
+            <option value="name_desc">Sort by Address Descending</option>
+            <option value="">Sort by Address Ascending</option>
+            <option value="City">Sort by City Ascending</option>
+            <option value="city_desc">Sort by City Descending</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Search and Sort</button>
+    </div>
+</form>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AddressLine1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AddressLine2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StateOrProvince)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostalCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Country)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AddressLine1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AddressLine2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StateOrProvince)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PostalCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Country)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Address)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.LocationID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.LocationID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.LocationID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

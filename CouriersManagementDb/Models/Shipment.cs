@@ -17,7 +17,7 @@ namespace CouriersManagementDb.Models
 
     public class Shipment
     {
-       
+
         [Key]
         [Required]
         public int ShipmentID { get; set; } // Primary key for the shipment entity
@@ -53,38 +53,30 @@ namespace CouriersManagementDb.Models
         public virtual ICollection<Payment> Payments { get; set; } // Collection of payments associated with the shipment
 
         // Custom validation attributes to enforce date rules
-        public class FutureDateAttribute : ValidationAttribute
+    }
+        
+}
+public class FutureDateAttribute : ValidationAttribute
+{
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        if (value is DateTime dateTimeValue && dateTimeValue < DateTime.Today)
         {
-            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-            {
-                if (value is DateTime dateTimeValue && dateTimeValue < DateTime.Today)
-                {
-                    return new ValidationResult(GetErrorMessage(validationContext.DisplayName));
-                }
-                return ValidationResult.Success;
-            }
-
-            private string GetErrorMessage(string fieldName)
-            {
-                return $"{fieldName} must be in the future.";
-            }
+            return new ValidationResult("Arrival date must be today or in the future.");
         }
-
-        public class PastOrCurrentDateAttribute : ValidationAttribute
-        {
-            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-            {
-                if (value is DateTime dateTimeValue && dateTimeValue > DateTime.Today)
-                {
-                    return new ValidationResult(GetErrorMessage(validationContext.DisplayName));
-                }
-                return ValidationResult.Success;
-            }
-
-            private string GetErrorMessage(string fieldName)
-            {
-                return $"{fieldName} cannot be in the future.";
-            }
-        }
+        return ValidationResult.Success;
     }
 }
+
+public class PastOrCurrentDateAttribute : ValidationAttribute
+{
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        if (value is DateTime dateTimeValue && dateTimeValue > DateTime.Today)
+        {
+            return new ValidationResult("Dispatch date must be today.");
+        }
+        return ValidationResult.Success;
+    }
+}
+

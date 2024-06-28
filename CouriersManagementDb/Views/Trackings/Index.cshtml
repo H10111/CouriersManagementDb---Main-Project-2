@@ -1,0 +1,66 @@
+﻿@model IEnumerable<CouriersManagementDb.Models.Tracking>
+
+@{
+    ViewData["Title"] = "Index";
+    var statusSortParam = ViewData["StatusSortParam"] as string ?? "status_desc";
+    var dateSortParam = ViewData["DateSortParam"] as string ?? "date_desc";
+}
+
+<h1>Tracking</h1>
+<form asp-action="Index" method="get" class="form-inline">
+    <div class="form-group">
+        <input type="text" name="searchString" class="form-control" placeholder="Search by package contents or location" value="@ViewData["CurrentFilter"]" />
+        <select name="sortOrder" class="form-control">
+            <option value="Status">Status Ascending</option>
+            <option value="@statusSortParam">Status Descending</option>
+            <option value="Date">Date Ascending</option>
+            <option value="@dateSortParam">Date Descending</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Search and Sort</button>
+    </div>
+</form>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DeliveryStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Timestamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Package)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeliveryStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timestamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Package.Contents)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location.AddressLine1)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TrackingID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TrackingID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TrackingID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CouriersManagementDb.Models
 {
+    
+
     public class Tracking
     {
         [Key]
@@ -31,21 +33,24 @@ namespace CouriersManagementDb.Models
         public virtual Location Location { get; set; } // Navigation property for the related location
 
         // Custom validation attribute to ensure that timestamps are in the reasonable past to prevent erroneous data entry
-        public class ReasonablePastDateAttribute : ValidationAttribute
+        
+    }
+}
+public class ReasonablePastDateAttribute : ValidationAttribute
+{
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        if (value is DateTime dateTimeValue)
         {
-            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+            if (dateTimeValue > DateTime.Now)
             {
-                DateTime dt = Convert.ToDateTime(value);
-                if (dt > DateTime.Now)
-                {
-                    return new ValidationResult("The date cannot be in the future.");
-                }
-                if (dt < DateTime.Now.AddYears(-5)) // Assuming 5 years is the maximum reasonable age for a tracking record
-                {
-                    return new ValidationResult("The date is too far in the past.");
-                }
-                return ValidationResult.Success;
+                return new ValidationResult("The date cannot be in the future.");
+            }
+            if (dateTimeValue < DateTime.Now.AddYears(-5)) // Validates that the date is not more than 5 years in the past
+            {
+                return new ValidationResult("The date is too far in the past.");
             }
         }
+        return ValidationResult.Success;
     }
 }
