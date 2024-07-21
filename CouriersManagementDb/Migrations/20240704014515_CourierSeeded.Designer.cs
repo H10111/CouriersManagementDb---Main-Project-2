@@ -4,6 +4,7 @@ using CouriersManagementDb.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CouriersManagementDb.Migrations
 {
     [DbContext(typeof(CouriersManagementDbContext))]
-    partial class CouriersManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240704014515_CourierSeeded")]
+    partial class CourierSeeded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -128,7 +131,7 @@ namespace CouriersManagementDb.Migrations
 
                     b.HasKey("CourierID");
 
-                    b.ToTable("Couriers", (string)null);
+                    b.ToTable("Couriers");
                 });
 
             modelBuilder.Entity("CouriersManagementDb.Models.Customer", b =>
@@ -164,7 +167,7 @@ namespace CouriersManagementDb.Migrations
 
                     b.HasKey("CustomerID");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("CouriersManagementDb.Models.Employee", b =>
@@ -200,7 +203,7 @@ namespace CouriersManagementDb.Migrations
 
                     b.HasKey("EmployeeID");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("CouriersManagementDb.Models.Location", b =>
@@ -247,7 +250,7 @@ namespace CouriersManagementDb.Migrations
 
                     b.HasIndex("CustomerID");
 
-                    b.ToTable("Locations", (string)null);
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("CouriersManagementDb.Models.Package", b =>
@@ -281,7 +284,7 @@ namespace CouriersManagementDb.Migrations
 
                     b.HasIndex("ShipmentID");
 
-                    b.ToTable("Packages", (string)null);
+                    b.ToTable("Packages");
                 });
 
             modelBuilder.Entity("CouriersManagementDb.Models.Payment", b =>
@@ -326,7 +329,7 @@ namespace CouriersManagementDb.Migrations
 
                     b.HasIndex("ShipmentID");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("CouriersManagementDb.Models.Shipment", b =>
@@ -358,7 +361,7 @@ namespace CouriersManagementDb.Migrations
 
                     b.HasIndex("CustomerID");
 
-                    b.ToTable("Shipments", (string)null);
+                    b.ToTable("Shipments");
                 });
 
             modelBuilder.Entity("CouriersManagementDb.Models.Tracking", b =>
@@ -387,7 +390,7 @@ namespace CouriersManagementDb.Migrations
 
                     b.HasIndex("PackageID");
 
-                    b.ToTable("Trackings", (string)null);
+                    b.ToTable("Trackings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

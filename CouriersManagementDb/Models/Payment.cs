@@ -49,7 +49,7 @@ public class ValidPaymentDateAttribute : ValidationAttribute
 {
     public ValidPaymentDateAttribute()
     {
-        // Setting a default error message
+        // Setting a default error message indicating the the date must be the present day
         ErrorMessage = "The payment date must be today's date.";
     }
 

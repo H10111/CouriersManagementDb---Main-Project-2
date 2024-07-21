@@ -92,7 +92,7 @@ namespace CouriersManagementDb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TrackingID,DeliveryStatus,Timestamp,PackageID,LocationID")] Tracking tracking)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _context.Add(tracking);
                 await _context.SaveChangesAsync();
@@ -133,7 +133,7 @@ namespace CouriersManagementDb.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
                 {

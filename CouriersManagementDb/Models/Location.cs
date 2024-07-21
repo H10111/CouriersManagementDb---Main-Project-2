@@ -32,8 +32,9 @@ namespace CouriersManagementDb.Models
         public string StateOrProvince { get; set; }  // State or province
 
         [Required(ErrorMessage = "Postal code is required.")]
-        [PostalCodeValidation(ErrorMessage = "Invalid postal code format.")]
+        [RegularExpression(@"^\d+$", ErrorMessage = "Postal code must be numeric.")]
         public string PostalCode { get; set; }  // Postal code
+
 
         [Required(ErrorMessage = "Country is required.")]
         [StringLength(100, ErrorMessage = "Country name cannot exceed 100 characters.")]
@@ -41,17 +42,6 @@ namespace CouriersManagementDb.Models
 
         public virtual Customer Customer { get; set; }  // Navigation property to the Customer
 
-        public class PostalCodeValidation : ValidationAttribute
-        {
-            public override bool IsValid(object value)
-            {
-                var postalCode = value as string;
-                if (string.IsNullOrWhiteSpace(postalCode)) return false;
-
-                // Adjust the regex pattern to fit the postal code formats needed (simple example for US/Canada)
-                return Regex.IsMatch(postalCode, @"^\d{5}(-\d{4})?$") || Regex.IsMatch(postalCode, @"^[A-Z]\d[A-Z] \d[A-Z]\d$");
-            }
-        }
 
     }
 }

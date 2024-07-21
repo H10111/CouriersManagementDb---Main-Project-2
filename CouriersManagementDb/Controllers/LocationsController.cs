@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CouriersManagementDb.Areas.Identity.Data;
 using CouriersManagementDb.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CouriersManagementDb.Controllers
 {
@@ -58,6 +59,7 @@ namespace CouriersManagementDb.Controllers
 
 
         // GET: Locations/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -77,6 +79,7 @@ namespace CouriersManagementDb.Controllers
         }
 
         // GET: Locations/Create
+
         public IActionResult Create()
         {
             ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "Address");
@@ -90,7 +93,7 @@ namespace CouriersManagementDb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("LocationID,CustomerID,AddressLine1,AddressLine2,City,StateOrProvince,PostalCode,Country")] Location location)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _context.Add(location);
                 await _context.SaveChangesAsync();
@@ -129,7 +132,7 @@ namespace CouriersManagementDb.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
                 {
