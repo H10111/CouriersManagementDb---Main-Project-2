@@ -1,0 +1,30 @@
+# Courier Management System
+
+This is a simple ASP.NET Core 8 application for managing courier services.
+
+## How to Run the Project
+
+### Prerequisites
+- Git
+- .NET 8 SDK
+- Visual Studio 2022 or later with ASP.NET and web development workload
+
+### Steps to Run
+
+1. **Clone the repository**
+   - Open your command line interface (CLI).
+   - Navigate to the folder where you want to clone the project.
+   - Run: `git clone https://github.com/your-username/your-project.git`
+   - Replace `https://github.com/your-username/your-project.git` with your repository URL.
+
+2. **Open and Run the Project**
+   - Open Visual Studio.
+   - Go to `File` -> `Open` -> `Project/Solution`.
+   - Navigate to the directory where you cloned the repository and open the solution file.
+   - Press `F5` to build and run the project. The application will open in your default web browser.
+
+### Additional Information
+
+Ensure your development environment is set up to work with ASP.NET Core 8, including any necessary configurations for running web applications.
+
+Happy coding!
