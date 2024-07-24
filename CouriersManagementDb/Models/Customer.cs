@@ -27,7 +27,7 @@ namespace CouriersManagementDb.Models
 
         [Required(ErrorMessage = "Phone number is required.")] // Ensures the phone number is not left blank
         [Phone(ErrorMessage = "Invalid phone number.")] // Validates that the phone number is in a correct format
-        [RegularExpression(@"^[1-9]{1}[0-9]{3,14}$", ErrorMessage = "Phone number must be in international format without starting with '+'.")]
+        [RegularExpression(@"^\d+$", ErrorMessage = "Phone number must contain only numbers.")]
         // Ensures the phone number is in international format
         public string PhoneNumber { get; set; }
         

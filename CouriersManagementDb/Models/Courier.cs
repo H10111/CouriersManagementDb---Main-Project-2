@@ -33,7 +33,7 @@ namespace CouriersManagementDb.Models
 
         [Required(ErrorMessage = "Phone number is required.")]
         [Phone(ErrorMessage = "Invalid phone number.")]
-        [RegularExpression(@"^\+[1-9]\d{1,14}$", ErrorMessage = "Phone number must be a valid international phone number.")]
+        [RegularExpression(@"^\d+$", ErrorMessage = "Phone number must contain only numbers.")]
         [Display(Name = "Phone Number")]
         // International format phone number of the courier, validated for global use.
         public string PhoneNumber { get; set; }

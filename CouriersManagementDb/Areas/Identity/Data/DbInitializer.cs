@@ -18,10 +18,10 @@ public static class DbInitializer
 
         var customers = new Customer[]
         {
-                new Customer { FirstName = "John", LastName = "Doe", Email = "john.doe@example.com", Address = "123 Elm St", PhoneNumber = "123-456-7890" },
-                new Customer { FirstName = "Jane", LastName = "Smith", Email = "jane.smith@example.com", Address = "456 Oak St", PhoneNumber = "987-654-3210" },
-                new Customer { FirstName = "Alice", LastName = "Johnson", Email = "alice.johnson@example.com", Address = "789 Pine St", PhoneNumber = "564-738-2910" },
-                new Customer { FirstName = "Bob", LastName = "Brown", Email = "bob.brown@example.com", Address = "321 Maple St", PhoneNumber = "102-456-7890" }
+                new Customer { FirstName = "John", LastName = "Doe", Email = "john.doe@example.com", Address = "123 Elm St", PhoneNumber = "1234567890" },
+                new Customer { FirstName = "Jane", LastName = "Smith", Email = "jane.smith@example.com", Address = "456 Oak St", PhoneNumber = "9876543210" },
+                new Customer { FirstName = "Alice", LastName = "Johnson", Email = "alice.johnson@example.com", Address = "789 Pine St", PhoneNumber = "5647382910" },
+                new Customer { FirstName = "Bob", LastName = "Brown", Email = "bob.brown@example.com", Address = "321 Maple St", PhoneNumber = "1024567890" }
         };
 
         foreach (Customer c in customers)
@@ -31,16 +31,16 @@ public static class DbInitializer
 
         var couriers = new Courier[]
         {
-            new Courier { FirstName = "lol", LastName = "Doe", Email = "johndoe@example.com", PhoneNumber = "123-456-7890", BaseLocation = "Auckland" },
-            new Courier { FirstName = "bobb", LastName = "Smith", Email = "janesmith@example.com", PhoneNumber = "098-765-4321", BaseLocation = "Wellington" },
-            new Courier { FirstName = "wonder", LastName = "Johnson", Email = "alicejohnson@example.com", PhoneNumber = "456-123-7890", BaseLocation = "Christchurch" },
-            new Courier { FirstName = "dutch", LastName = "Brown", Email = "bobbrown@example.com", PhoneNumber = "321-654-9870", BaseLocation = "Hamilton" },
-            new Courier { FirstName = "Maria", LastName = "Garcia", Email = "mariagarcia@example.com", PhoneNumber = "+642-201-7890", BaseLocation = "Dunedin" },
-            new Courier { FirstName = "James", LastName = "Wilson", Email = "jameswilson@example.com", PhoneNumber = "+642-302-9812", BaseLocation = "Napier" },
-            new Courier { FirstName = "Emma", LastName = "Lee", Email = "emmalee@example.com", PhoneNumber = "+642-403-1593", BaseLocation = "Tauranga" },
-            new Courier { FirstName = "Oliver", LastName = "Taylor", Email = "olivertaylor@example.com", PhoneNumber = "+642-504-7512", BaseLocation = "Palmerston North" },
-            new Courier { FirstName = "Sophia", LastName = "Moore", Email = "sophiamoore@example.com", PhoneNumber = "+642-605-3621", BaseLocation = "Nelson" },
-            new Courier { FirstName = "Lucas", LastName = "Martin", Email = "lucasmartin@example.com", PhoneNumber = "+642-706-1728", BaseLocation = "Rotorua" }
+            new Courier { FirstName = "lol", LastName = "Doe", Email = "johndoe@example.com", PhoneNumber = "1234567890", BaseLocation = "Auckland" },
+            new Courier { FirstName = "bobb", LastName = "Smith", Email = "janesmith@example.com", PhoneNumber = "0987654321", BaseLocation = "Wellington" },
+            new Courier { FirstName = "wonder", LastName = "Johnson", Email = "alicejohnson@example.com", PhoneNumber = "4561237890", BaseLocation = "Christchurch" },
+            new Courier { FirstName = "dutch", LastName = "Brown", Email = "bobbrown@example.com", PhoneNumber = "3216549870", BaseLocation = "Hamilton" },
+            new Courier { FirstName = "Maria", LastName = "Garcia", Email = "mariagarcia@example.com", PhoneNumber = "6422017890", BaseLocation = "Dunedin" },
+            new Courier { FirstName = "James", LastName = "Wilson", Email = "jameswilson@example.com", PhoneNumber = "642302812", BaseLocation = "Napier" },
+            new Courier { FirstName = "Emma", LastName = "Lee", Email = "emmalee@example.com", PhoneNumber = "6424031593", BaseLocation = "Tauranga" },
+            new Courier { FirstName = "Oliver", LastName = "Taylor", Email = "olivertaylor@example.com", PhoneNumber = "6425047512", BaseLocation = "Palmerston North" },
+            new Courier { FirstName = "Sophia", LastName = "Moore", Email = "sophiamoore@example.com", PhoneNumber = "6426053621", BaseLocation = "Nelson" },
+            new Courier { FirstName = "Lucas", LastName = "Martin", Email = "lucasmartin@example.com", PhoneNumber = "6427061728", BaseLocation = "Rotorua" }
 
 
         };
