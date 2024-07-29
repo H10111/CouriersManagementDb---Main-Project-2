@@ -22,7 +22,7 @@ namespace CouriersManagementDb.Models
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Last name must be between 2 and 50 characters.")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z]*$", ErrorMessage = "Last name must start with a capital letter and contain only alphabetic characters.")]
         [Display(Name = "Last Name")]
-        // Last name of the courier, also starting with a capital letter.
+        // Last name of the courier, also starting with a capital letter. 
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Email address is required.")]
